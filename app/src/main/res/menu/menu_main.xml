@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.gmail.lusersks.notes.MainActivity">
+
+    <item
+        android:id="@+id/menuItemSettings"
+        android:orderInCategory="4"
+        android:title="@string/menu_settings" />
+
+</menu>

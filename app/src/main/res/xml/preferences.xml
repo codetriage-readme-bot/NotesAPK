@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Text preferences">
+        <PreferenceScreen
+            android:key="Color"
+            android:title="Text color"
+            android:summary="Set text color">
+            <CheckBoxPreference
+                android:key="ColorBlack"
+                android:title="Black"
+                android:defaultValue="true"
+                android:summary="Set black color"/>
+            <CheckBoxPreference
+                android:key="ColorGreen"
+                android:title="Green"
+                android:summary="Set green color"/>
+            <CheckBoxPreference
+                android:key="ColorRed"
+                android:title="Red"
+                android:summary="Set red color"/>
+        </PreferenceScreen>
+        <EditTextPreference
+            android:key="Size"
+            android:title="Text size"
+            android:summary="Set text size"
+            android:defaultValue="12"
+            android:dialogTitle="Set text size (from 10 to 32)" />
+    </PreferenceCategory>
+</PreferenceScreen>
