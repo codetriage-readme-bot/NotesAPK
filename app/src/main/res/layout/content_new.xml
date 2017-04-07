@@ -9,7 +9,7 @@
     tools:showIn="@layout/activity_new">
 
     <EditText
-        android:id="@+id/note_title"
+        android:id="@+id/etNoteTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/note_hint_title"
@@ -18,13 +18,13 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <EditText
-        android:id="@+id/note_body"
+        android:id="@+id/etNoteBody"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:hint="@string/note_hint_body"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/note_title" />
+        app:layout_constraintTop_toBottomOf="@+id/etNoteTitle" />
 
 </android.support.constraint.ConstraintLayout>

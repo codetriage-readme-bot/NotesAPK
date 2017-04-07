@@ -4,4 +4,5 @@
     <string name="note_hint_title">Title of your note!</string>
     <string name="note_hint_body">What could you note there?</string>
     <string name="menu_save">Save</string>
+    <string name="note_title">Note Title</string>
 </resources>
