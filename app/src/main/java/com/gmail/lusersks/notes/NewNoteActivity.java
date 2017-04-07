@@ -34,28 +34,25 @@ public class NewNoteActivity extends AppCompatActivity {
         int id = item.getItemId();
         Intent intent = new Intent();
 
-        switch (id) {
-            case R.id.menuItemSave:
-                String title = etNoteTitle.getText().toString();
-                String content = etNoteContent.getText().toString();
-                NotesData.addItem(title, content);
+        if (id == R.id.menuItemSave) {
+            String title = etNoteTitle.getText().toString();
+            String content = etNoteContent.getText().toString();
+            NotesData.addItem(this, title, content);
 
-//                intent.putExtra(MainActivity.EXTRA_TEXT, title);
-//                this.setResult(Activity.RESULT_OK, intent);
-                this.finish();
-
-                break;
-
-            case R.id.menuItemSettings:
-//                Intent intent = new Intent();
-                intent.setClass(this, PreferencesActivity.class);
-                startActivity(intent);
-                break;
-
-            default:
-                return false;
+//            intent.putExtra(MainActivity.EXTRA_TEXT, title);
+//            this.setResult(Activity.RESULT_OK, intent);
+            this.finish();
+            return true;
         }
 
-        return true;
+        if (id == R.id.menuItemSettings) {
+//            Intent intent = new Intent();
+            intent.setClass(this, PreferencesActivity.class);
+            startActivity(intent);
+
+            return true;
+        }
+
+        return false;
     }
 }

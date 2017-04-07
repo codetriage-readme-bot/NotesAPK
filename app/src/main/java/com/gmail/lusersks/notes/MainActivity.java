@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Log.d("appLog", "onResume");
 
+        // TODO: load it only once
+        NotesData.loadItems(this);
+
         // List of all notes
         ListAdapter mAdapter = new SimpleAdapter(this,
                 NotesData.getItems(),
@@ -79,15 +82,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.menuItemSettings:
-                Intent intent = new Intent();
-                intent.setClass(this, PreferencesActivity.class);
-                startActivity(intent);
-                break;
-            default:
-                return false;
+
+        if (id == R.id.menuItemSettings) {
+            Intent intent = new Intent();
+            intent.setClass(this, PreferencesActivity.class);
+            startActivity(intent);
+            return true;
         }
-        return true;
+
+        return false;
     }
 }
