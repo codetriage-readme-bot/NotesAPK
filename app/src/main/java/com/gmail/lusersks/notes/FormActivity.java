@@ -8,7 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-public class NewActivity extends AppCompatActivity {
+public class FormActivity extends AppCompatActivity {
 
     public EditText etNoteTitle;
     public EditText etNoteContent;
@@ -16,15 +16,20 @@ public class NewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new);
+        setContentView(R.layout.activity_form);
 
         etNoteTitle = (EditText) findViewById(R.id.etNoteTitle);
-        etNoteContent = (EditText) findViewById(R.id.etNoteBody);
+        etNoteContent = (EditText) findViewById(R.id.etNoteContent);
+
+        Intent intent = this.getIntent();
+        setTitle(intent.getStringExtra(MainActivity.EXTRA_FORM_TITLE));
+        etNoteTitle.setText(intent.getStringExtra(MainActivity.EXTRA_NOTE));
+        etNoteContent.setText(intent.getStringExtra(MainActivity.EXTRA_CONTENT));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_new, menu);
+        getMenuInflater().inflate(R.menu.menu_form, menu);
         return true;
     }
 
@@ -45,7 +50,6 @@ public class NewActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.setClass(this, PreferencesActivity.class);
             startActivity(intent);
-
             return true;
         }
 

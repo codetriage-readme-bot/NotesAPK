@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.gmail.lusersks.notes.NewActivity">
+    tools:context="com.gmail.lusersks.notes.FormActivity">
 
-    <include layout="@layout/content_new" />
+    <include layout="@layout/note_form" />
 
 </android.support.design.widget.CoordinatorLayout>

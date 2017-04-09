@@ -1,7 +1,6 @@
 package com.gmail.lusersks.notes;
 
 import android.content.Context;
-import android.view.View;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,7 +31,7 @@ class NotesData {
         return items;
     }
 
-    public static void addItem(NewActivity newActivity, String title, String content) {
+    public static void addItem(FormActivity formActivity, String title, String content) {
         listNotes.add(title);
         listContents.add(content);
 
@@ -41,7 +40,7 @@ class NotesData {
         String fileName = "note" + (listNotes.size() - 1);
 
         try {
-            fos = newActivity.openFileOutput(fileName, Context.MODE_PRIVATE);
+            fos = formActivity.openFileOutput(fileName, Context.MODE_PRIVATE);
 
             fos.write(title.getBytes());
             fos.write('\n');

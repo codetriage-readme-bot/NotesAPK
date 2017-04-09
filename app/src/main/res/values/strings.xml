@@ -2,12 +2,14 @@
     <string name="app_name">Notes</string>
     <string name="menu_settings">Settings</string>
     <string name="note_hint_title">Title of your note!</string>
-    <string name="note_hint_body">What could you note there?</string>
+    <string name="note_hint_content">What could you note there?</string>
     <string name="menu_save">Save</string>
     <string name="note_title">Note Title</string>
     <string name="show_note">Note</string>
     <string name="show_content">Content</string>
     <string name="menu_show_note">Show</string>
     <string name="menu_edit_note">Edit</string>
-    <string name="menu_delete_note">Delete</string>
+    <string name="menu_delete_notes">Delete several notes</string>
+    <string name="menu_show_item_delete">Delete</string>
+    <string name="menu_show_item_edit">Edit</string>
 </resources>

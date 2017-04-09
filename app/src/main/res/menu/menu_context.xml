@@ -2,15 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_note_show"
-        android:title="@string/menu_show_note"/>
-
-    <item
-        android:id="@+id/menu_note_edit"
-        android:title="@string/menu_edit_note"/>
-
-    <item
         android:id="@+id/menu_note_delete"
-        android:title="@string/menu_delete_note"/>
+        android:title="@string/menu_delete_notes"/>
 
 </menu>
