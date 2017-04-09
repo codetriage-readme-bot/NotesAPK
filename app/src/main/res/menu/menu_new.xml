@@ -1,17 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.gmail.lusersks.notes.NewNoteActivity">
+    tools:context="com.gmail.lusersks.notes.NewActivity">
 
     <item
-        android:id="@+id/menuItemSave"
+        android:id="@+id/menu_item_save"
         android:icon="@android:drawable/ic_menu_save"
         android:orderInCategory="1"
         android:title="@string/menu_save"
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/menuItemSettings"
+        android:id="@+id/menu_item_settings"
         android:orderInCategory="4"
         android:title="@string/menu_settings" />
 

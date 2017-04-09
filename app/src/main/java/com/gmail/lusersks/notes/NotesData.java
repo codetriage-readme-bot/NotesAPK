@@ -1,14 +1,13 @@
 package com.gmail.lusersks.notes;
 
-import android.app.Activity;
 import android.content.Context;
+import android.view.View;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,11 +16,6 @@ class NotesData {
 
     public static final String NOTE_TITLE = "title";
 
-    private static String[] notes = {"Test note"};
-    private static String[] contents = {"The content of the first test post."};
-
-    /*private static List<String> listNotes = new ArrayList<>(Arrays.asList(notes[0]));
-    private static List<String> listContents = new ArrayList<>(Arrays.asList(contents[0]));*/
     private static List<String> listNotes = new ArrayList<>();
     private static List<String> listContents = new ArrayList<>();
 
@@ -38,7 +32,7 @@ class NotesData {
         return items;
     }
 
-    public static void addItem(NewNoteActivity newNoteActivity, String title, String content) {
+    public static void addItem(NewActivity newActivity, String title, String content) {
         listNotes.add(title);
         listContents.add(content);
 
@@ -47,7 +41,7 @@ class NotesData {
         String fileName = "note" + (listNotes.size() - 1);
 
         try {
-            fos = newNoteActivity.openFileOutput(fileName, Context.MODE_PRIVATE);
+            fos = newActivity.openFileOutput(fileName, Context.MODE_PRIVATE);
 
             fos.write(title.getBytes());
             fos.write('\n');
@@ -92,5 +86,19 @@ class NotesData {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static String getNote(int index) {
+        return listNotes.get(index);
+    }
+
+    public static String getContext(String note) {
+        int index = -1;
+        for (int i = 0; i < listNotes.size(); i++) {
+            if (listNotes.get(i).equals(note)) {
+                index = i;
+            }
+        }
+        return listContents.get(index);
     }
 }

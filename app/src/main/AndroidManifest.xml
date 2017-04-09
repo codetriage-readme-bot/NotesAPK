@@ -23,8 +23,11 @@
             android:name=".PreferencesActivity"
             android:label="Preferences" />
         <activity
-            android:name=".NewNoteActivity"
+            android:name=".NewActivity"
             android:label="New Note" />
+        <activity
+            android:name=".ShowActivity"
+            android:label="Note" />
     </application>
 
 </manifest>

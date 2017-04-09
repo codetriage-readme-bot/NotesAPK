@@ -5,26 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.gmail.lusersks.notes.NewActivity"
-    tools:showIn="@layout/activity_new">
+    tools:context="com.gmail.lusersks.notes.ShowActivity"
+    tools:showIn="@layout/activity_show">
 
-    <EditText
-        android:id="@+id/etNoteTitle"
+    <TextView
+        android:id="@+id/tvShowNote"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="@string/note_hint_title"
+        android:padding="16dp"
+        android:text="@string/show_note"
+        android:textSize="30sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/etNoteBody"
+    <TextView
+        android:id="@+id/tvShowContent"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:hint="@string/note_hint_body"
+        android:padding="16dp"
+        android:text="@string/show_content"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etNoteTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/tvShowNote" />
 
 </android.support.constraint.ConstraintLayout>
