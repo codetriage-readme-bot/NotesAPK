@@ -31,29 +31,32 @@ class NotesData {
         return items;
     }
 
-    public static void addItem(FormActivity formActivity, String title, String content) {
+    public static void addItem(FormActivity activity, String title, String content) {
         listNotes.add(title);
         listContents.add(content);
 
-        // Save to file
-        FileOutputStream fos = null;
         String fileName = "note" + (listNotes.size() - 1);
-
-        try {
-            fos = formActivity.openFileOutput(fileName, Context.MODE_PRIVATE);
-
-            fos.write(title.getBytes());
-            fos.write('\n');
-            fos.write(content.getBytes());
-
-            fos.close();
-
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-        }
+        saveDataToFile(activity, title, content, fileName);
     }
 
-    public static void loadItems(MainActivity mainActivity) {
+    public static void editItem(FormActivity activity, String oldTitle, String title, String content) {
+        int index = findIndexByNoteTitle(oldTitle);
+        listNotes.set(index, title);
+        listContents.set(index, content);
+
+        String fileName = "note" + index;
+        saveDataToFile(activity, title, content, fileName);
+    }
+
+    public static void deleteItem(String noteTitle) {
+        int index = findIndexByNoteTitle(noteTitle);
+        listNotes.remove(index);
+        listContents.remove(index);
+
+        String fileName = "note" + index;
+    }
+
+    public static void loadItems(MainActivity activity) {
         // Load notes from file
         FileInputStream fis = null;
         String fileName = "";
@@ -63,7 +66,7 @@ class NotesData {
         for (int i = 0; ; i++) {
             fileName = "note" + i;
             try {
-                fis = mainActivity.openFileInput(fileName);
+                fis = activity.openFileInput(fileName);
                 int bufSize = fis.available();
                 byte[] buffer = new byte[bufSize];
 
@@ -92,12 +95,32 @@ class NotesData {
     }
 
     public static String getContext(String note) {
+        int index = findIndexByNoteTitle(note);
+        return listContents.get(index);
+    }
+
+    private static void saveDataToFile(FormActivity activity, String title, String content, String fileName) {
+        try {
+            FileOutputStream fos = activity.openFileOutput(fileName, Context.MODE_PRIVATE);
+
+            fos.write(title.getBytes());
+            fos.write('\n');
+            fos.write(content.getBytes());
+
+            fos.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static int findIndexByNoteTitle(String title) {
         int index = -1;
         for (int i = 0; i < listNotes.size(); i++) {
-            if (listNotes.get(i).equals(note)) {
+            if (listNotes.get(i).equals(title)) {
                 index = i;
             }
         }
-        return listContents.get(index);
+        return index;
     }
 }

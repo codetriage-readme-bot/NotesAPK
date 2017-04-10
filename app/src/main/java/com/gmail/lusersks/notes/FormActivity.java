@@ -10,8 +10,10 @@ import android.widget.EditText;
 
 public class FormActivity extends AppCompatActivity {
 
-    public EditText etNoteTitle;
-    public EditText etNoteContent;
+    private EditText etNoteTitle;
+    private EditText etNoteContent;
+    private Intent intent;
+    private String oldTitle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -21,10 +23,12 @@ public class FormActivity extends AppCompatActivity {
         etNoteTitle = (EditText) findViewById(R.id.etNoteTitle);
         etNoteContent = (EditText) findViewById(R.id.etNoteContent);
 
-        Intent intent = this.getIntent();
+        intent = this.getIntent();
         setTitle(intent.getStringExtra(MainActivity.EXTRA_FORM_TITLE));
-        etNoteTitle.setText(intent.getStringExtra(MainActivity.EXTRA_NOTE));
+        oldTitle = intent.getStringExtra(MainActivity.EXTRA_NOTE);
+        etNoteTitle.setText(oldTitle);
         etNoteContent.setText(intent.getStringExtra(MainActivity.EXTRA_CONTENT));
+
     }
 
     @Override
@@ -40,9 +44,17 @@ public class FormActivity extends AppCompatActivity {
         if (id == R.id.menu_item_save) {
             String title = etNoteTitle.getText().toString();
             String content = etNoteContent.getText().toString();
-            NotesData.addItem(this, title, content);
 
-            this.finish();
+            if (getTitle().equals("New note")) {
+                NotesData.addItem(this, title, content);
+            } else {
+                NotesData.editItem(this, oldTitle, title, content);
+                intent.putExtra(MainActivity.EXTRA_NOTE, title);
+                intent.putExtra(MainActivity.EXTRA_CONTENT, content);
+            }
+
+            setResult(RESULT_OK, intent);
+            finish();
             return true;
         }
 

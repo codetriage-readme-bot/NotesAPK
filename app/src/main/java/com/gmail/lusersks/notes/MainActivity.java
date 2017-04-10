@@ -3,6 +3,7 @@ package com.gmail.lusersks.notes;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_CONTENT = "extra_content";
     public static final String EXTRA_FORM_TITLE = "extra_form_title";
 
+    private FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         NotesData.loadItems(this);
 
         // Button for add note
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -42,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(EXTRA_FORM_TITLE, "New note");
                 intent.putExtra(EXTRA_NOTE, "");
                 intent.putExtra(EXTRA_CONTENT, "");
-                startActivity(intent);
+//                startActivity(intent);
+                startActivityForResult(intent, 1);
 
                 /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
@@ -76,6 +80,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         registerForContextMenu(mList);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            Snackbar.make(fab, "New note is added", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
     }
 
     @Override
