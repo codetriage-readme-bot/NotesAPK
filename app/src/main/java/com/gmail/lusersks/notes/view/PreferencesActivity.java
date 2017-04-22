@@ -1,8 +1,10 @@
-package com.gmail.lusersks.notes;
+package com.gmail.lusersks.notes.view;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.support.annotation.Nullable;
+
+import com.gmail.lusersks.notes.R;
 
 public class PreferencesActivity extends PreferenceActivity {
 

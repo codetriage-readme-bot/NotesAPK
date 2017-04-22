@@ -20,11 +20,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PreferencesActivity"
+            android:name=".view.PreferencesActivity"
             android:label="Preferences" />
-        <activity android:name=".FormActivity" />
+        <activity android:name=".view.FormActivity" />
         <activity
-            android:name=".ShowActivity"
+            android:name=".view.ShowActivity"
             android:label="Note" />
     </application>
 

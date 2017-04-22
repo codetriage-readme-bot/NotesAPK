@@ -1,8 +1,8 @@
-package com.gmail.lusersks.notes;
+package com.gmail.lusersks.notes.listeners;
 
 
 import android.app.DialogFragment;
 
-interface DialogNoteDeleteListener {
+public interface DialogNoteDeleteListener {
     void onDialogPositiveClick(DialogFragment dialog, String note);
 }

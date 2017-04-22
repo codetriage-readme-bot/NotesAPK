@@ -1,6 +1,10 @@
-package com.gmail.lusersks.notes;
+package com.gmail.lusersks.notes.data;
 
 import android.content.Context;
+import android.util.Log;
+
+import com.gmail.lusersks.notes.MainActivity;
+import com.gmail.lusersks.notes.view.FormActivity;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class NotesData {
+public class NotesData {
 
     public static final String NOTE_TITLE = "title";
 
@@ -54,6 +58,13 @@ class NotesData {
         listContents.remove(index);
 
         String fileName = "note" + index;
+
+        Log.d("appLog", "NOTE: " + noteTitle + " - is deleted");
+    }
+
+    public static void clearItems() {
+        listNotes.clear();
+        listContents.clear();
     }
 
     public static void loadItems(MainActivity activity) {

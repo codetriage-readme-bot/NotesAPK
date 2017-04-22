@@ -1,4 +1,4 @@
-package com.gmail.lusersks.notes;
+package com.gmail.lusersks.notes.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+
+import com.gmail.lusersks.notes.MainActivity;
+import com.gmail.lusersks.notes.data.NotesData;
+import com.gmail.lusersks.notes.R;
 
 public class FormActivity extends AppCompatActivity {
 
@@ -20,8 +24,8 @@ public class FormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form);
 
-        etNoteTitle = (EditText) findViewById(R.id.etNoteTitle);
-        etNoteContent = (EditText) findViewById(R.id.etNoteContent);
+        etNoteTitle = (EditText) findViewById(R.id.et_note_title);
+        etNoteContent = (EditText) findViewById(R.id.et_note_content);
 
         intent = this.getIntent();
         setTitle(intent.getStringExtra(MainActivity.EXTRA_FORM_TITLE));
@@ -41,7 +45,7 @@ public class FormActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.menu_item_save) {
+        if (id == R.id.menu_form_save) {
             String title = etNoteTitle.getText().toString();
             String content = etNoteContent.getText().toString();
 
@@ -58,7 +62,7 @@ public class FormActivity extends AppCompatActivity {
             return true;
         }
 
-        if (id == R.id.menu_item_settings) {
+        if (id == R.id.menu_settings) {
             Intent intent = new Intent();
             intent.setClass(this, PreferencesActivity.class);
             startActivity(intent);

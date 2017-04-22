@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.gmail.lusersks.notes.FormActivity"
+    tools:context="com.gmail.lusersks.notes.view.FormActivity"
     tools:showIn="@layout/activity_form">
 
     <EditText
-        android:id="@+id/etNoteTitle"
+        android:id="@+id/et_note_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="@string/note_hint_title"
@@ -18,13 +18,13 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <EditText
-        android:id="@+id/etNoteContent"
+        android:id="@+id/et_note_content"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:hint="@string/note_hint_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etNoteTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/et_note_title" />
 
 </android.support.constraint.ConstraintLayout>

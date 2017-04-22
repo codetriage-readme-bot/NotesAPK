@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.gmail.lusersks.notes.ShowActivity"
+    tools:context="com.gmail.lusersks.notes.view.ShowActivity"
     tools:showIn="@layout/activity_show">
 
     <TextView

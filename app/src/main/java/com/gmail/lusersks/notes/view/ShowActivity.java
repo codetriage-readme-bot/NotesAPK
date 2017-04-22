@@ -1,4 +1,4 @@
-package com.gmail.lusersks.notes;
+package com.gmail.lusersks.notes.view;
 
 import android.app.DialogFragment;
 import android.content.Intent;
@@ -10,10 +10,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.gmail.lusersks.notes.MainActivity;
+import com.gmail.lusersks.notes.controller.NotesActions;
+import com.gmail.lusersks.notes.data.NotesData;
+import com.gmail.lusersks.notes.R;
+import com.gmail.lusersks.notes.listeners.DialogNoteDeleteListener;
+
 public class ShowActivity extends AppCompatActivity implements DialogNoteDeleteListener {
 
-    private TextView tvShowNote;
-    private TextView tvShowContent;
+    public TextView tvShowNote;
+    public TextView tvShowContent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,25 +42,20 @@ public class ShowActivity extends AppCompatActivity implements DialogNoteDeleteL
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
-
-            case R.id.menu_show_item_edit:
-                Intent intent = new Intent(this, FormActivity.class);
-                intent.putExtra(MainActivity.EXTRA_FORM_TITLE, "Edit Note");
-                intent.putExtra(MainActivity.EXTRA_NOTE, tvShowNote.getText());
-                intent.putExtra(MainActivity.EXTRA_CONTENT, tvShowContent.getText());
-//                startActivity(intent);
-                startActivityForResult(intent, 2);
+            case R.id.menu_show_item_edit: {
+                NotesActions.editSelected(ShowActivity.this);
                 return true;
-
-            case R.id.menu_show_item_delete:
+            }
+            case R.id.menu_show_item_delete: {
                 new DeleteDialog().show(getFragmentManager(), "deleteNoteDialog");
                 finish();
                 return true;
-
+            }
+            default: {
+                return false;
+            }
         }
-        return false;
     }
 
     @Override
