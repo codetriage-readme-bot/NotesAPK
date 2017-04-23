@@ -11,9 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.gmail.lusersks.notes.MainActivity;
 import com.gmail.lusersks.notes.R;
@@ -34,7 +32,7 @@ public class MultiNotesListener implements AbsListView.MultiChoiceModeListener {
         this.sbArray = new SparseBooleanArray();
         this.context = context;
 
-        this.adapter = ((MainActivity) context).simpleNotesAdapter;
+        this.adapter = ((MainActivity) context).notesAdapter;
         this.mainAppBarLayout = ((MainActivity) context).appBarLayout;
         this.listView = ((MainActivity) context).listView;
     }
@@ -57,6 +55,7 @@ public class MultiNotesListener implements AbsListView.MultiChoiceModeListener {
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
         mode.getMenuInflater().inflate(R.menu.multiple_delete, menu);
         mainAppBarLayout.setVisibility(View.GONE);
+
         return true;
     }
 

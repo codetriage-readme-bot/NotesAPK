@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.gmail.lusersks.notes.R;
+import com.gmail.lusersks.notes.listeners.CheckedNotesListener;
 
 public class SimpleNotesAdapter extends BaseAdapter {
 
@@ -39,13 +41,15 @@ public class SimpleNotesAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_view, parent, false);
-//            convertView.setTag(textView);
         }
 
-        TextView textView = (TextView) convertView.findViewById(R.id.tv_note_title);;
+//        CheckBox cbNote = (CheckBox) convertView.findViewById(R.id.lv_check_box);
+        TextView tvNote = (TextView) convertView.findViewById(R.id.tv_note_title);
+
+//        cbNote.setOnCheckedChangeListener(new CheckedNotesListener(context));
 
         String text = (String) getItem(position);
-        textView.setText(text);
+        tvNote.setText(text);
 
         return convertView;
     }

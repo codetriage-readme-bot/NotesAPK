@@ -60,6 +60,8 @@ public class NotesData {
         String fileName = "note" + index;
 
         Log.d("appLog", "NOTE: " + noteTitle + " - is deleted");
+
+        // TODO: delete file with note
     }
 
     public static void clearItems() {
@@ -68,6 +70,10 @@ public class NotesData {
     }
 
     public static void loadItems(MainActivity activity) {
+        // Clear lists
+        listNotes.clear();
+        listContents.clear();
+
         // Load notes from file
         FileInputStream fis = null;
         String fileName = "";
