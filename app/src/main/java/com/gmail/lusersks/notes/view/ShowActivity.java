@@ -1,6 +1,7 @@
 package com.gmail.lusersks.notes.view;
 
-import android.app.DialogFragment;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,9 +15,8 @@ import com.gmail.lusersks.notes.MainActivity;
 import com.gmail.lusersks.notes.controller.NotesActions;
 import com.gmail.lusersks.notes.data.NotesData;
 import com.gmail.lusersks.notes.R;
-import com.gmail.lusersks.notes.listeners.DialogNoteDeleteListener;
 
-public class ShowActivity extends AppCompatActivity implements DialogNoteDeleteListener {
+public class ShowActivity extends AppCompatActivity {
 
     public TextView tvShowNote;
     public TextView tvShowContent;
@@ -48,8 +48,7 @@ public class ShowActivity extends AppCompatActivity implements DialogNoteDeleteL
                 return true;
             }
             case R.id.menu_show_item_delete: {
-                new DeleteDialog().show(getFragmentManager(), "deleteNoteDialog");
-                finish();
+                showDeleteDialog();
                 return true;
             }
             default: {
@@ -75,10 +74,24 @@ public class ShowActivity extends AppCompatActivity implements DialogNoteDeleteL
         outState.putString("noteTitle", tvShowNote.getText().toString());
     }
 
-    @Override
-    public void onDialogPositiveClick(DialogFragment dialog, String noteTitle) {
-        if (dialog instanceof DeleteDialog) {
-            NotesData.deleteItem(noteTitle);
-        }
+    private void showDeleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(ShowActivity.this);
+        builder.setMessage("Do you  want to delete selected record(s)?")
+                .setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO  Auto-generated method stub
+                    }
+                })
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        NotesData.deleteItem((String) tvShowNote.getText());
+                        finish();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.setTitle("Confirmation");
+        alert.show();
     }
 }

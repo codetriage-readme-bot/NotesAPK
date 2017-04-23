@@ -64,6 +64,17 @@ public class NotesData {
         // TODO: delete file with note
     }
 
+    public static void deleteItem(int index) {
+        Log.d("appLog", "NOTE: " + listNotes.get(index) + " - is deleted");
+
+        listNotes.remove(index);
+        listContents.remove(index);
+
+        String fileName = "note" + index;
+
+        // TODO: delete file with note
+    }
+
     public static void clearItems() {
         listNotes.clear();
         listContents.clear();

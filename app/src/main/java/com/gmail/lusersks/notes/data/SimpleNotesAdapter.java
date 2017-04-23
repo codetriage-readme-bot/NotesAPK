@@ -9,7 +9,6 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.gmail.lusersks.notes.R;
-import com.gmail.lusersks.notes.listeners.CheckedNotesListener;
 
 public class SimpleNotesAdapter extends BaseAdapter {
 

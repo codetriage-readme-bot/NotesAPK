@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/menu_form_save"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/ic_save_black_24dp"
         android:orderInCategory="1"
         android:title="@string/menu_form_save"
         app:showAsAction="always" />

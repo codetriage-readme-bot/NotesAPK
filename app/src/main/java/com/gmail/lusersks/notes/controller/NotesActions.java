@@ -31,6 +31,15 @@ public class NotesActions {
         activity.startActivityForResult(intent, 2);
     }
 
+    public static void editSelected(Activity activity, int position) {
+        String note = NotesData.getNote(position);
+        Intent intent = new Intent(activity, FormActivity.class);
+        intent.putExtra(EXTRA_FORM_TITLE, "Edit Note");
+        intent.putExtra(EXTRA_NOTE, note);
+        intent.putExtra(EXTRA_CONTENT, NotesData.getContext(note));
+        activity.startActivityForResult(intent, 3);
+    }
+
     public static void showSelected(Activity activity, int position) {
         String note = NotesData.getNote(position);
         Intent intent = new Intent(activity.getApplicationContext(), ShowActivity.class);

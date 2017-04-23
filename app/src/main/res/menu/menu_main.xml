@@ -22,28 +22,28 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/edit_note"
+        android:icon="@drawable/ic_mode_edit_black_24dp"
+        android:orderInCategory="11"
+        android:title="@string/edit_note"
+        android:visible="false"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/select_all"
         android:icon="@drawable/ic_done_all_black_24dp"
-        android:orderInCategory="11"
+        android:orderInCategory="12"
         android:title="@string/select_all"
         android:visible="false"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/multiple_delete"
         android:icon="@drawable/ic_delete_black_24dp"
-        android:orderInCategory="12"
+        android:orderInCategory="13"
         android:title="@string/multiple_delete"
         android:visible="false"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/edit_note"
-        android:icon="@drawable/ic_mode_edit_black_24dp"
-        android:orderInCategory="13"
-        android:title="@string/edit_note"
-        android:visible="false"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/cancel_delete"
@@ -51,6 +51,6 @@
         android:orderInCategory="14"
         android:title="@string/cancel_delete"
         android:visible="false"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
 </menu>
