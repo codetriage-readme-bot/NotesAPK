@@ -9,12 +9,13 @@
     tools:showIn="@layout/activity_main">
 
     <TextView
+        android:id="@+id/there_is_no_notes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="100dp"
         android:paddingStart="100dp"
         android:paddingTop="200dp"
-        android:text="@string/there_is_no_notes" />
+        android:text="" />
 
     <ListView
         android:id="@+id/list_notes"

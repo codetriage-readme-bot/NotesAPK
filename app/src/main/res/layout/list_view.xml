@@ -9,7 +9,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:text="#N"/>
 
     <TextView
         android:id="@+id/tv_note_title"

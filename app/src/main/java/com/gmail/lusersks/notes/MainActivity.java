@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.gmail.lusersks.notes.presenter.NotesActions;
 import com.gmail.lusersks.notes.model.NotesData;
-import com.gmail.lusersks.notes.model.SimpleNotesAdapter;
+import com.gmail.lusersks.notes.presenter.SimpleNotesAdapter;
 import com.gmail.lusersks.notes.view.PreferencesActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,10 +34,10 @@ public class MainActivity extends AppCompatActivity {
     private static final boolean DELETING_PROCESS_END = false;
 
     private static boolean isSelectAll = true;
-    private static int checkedCount = 0;
 
     private FloatingActionButton addNewNoteBtn;
-    //    private SparseBooleanArray sbArray;
+    private TextView tvPlaceholder;
+
     public SimpleNotesAdapter adapterForListView;
     public AppBarLayout appBarLayout;
     public ListView listView;
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        adapterForListView = new SimpleNotesAdapter(this);
+        adapterForListView = new SimpleNotesAdapter(this, R.layout.list_view, R.id.tv_note_title);
         listView.setAdapter(adapterForListView);
         listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
@@ -96,19 +96,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_main_add: {
+                // TODO do it through adapter
                 NotesActions.addNew(MainActivity.this);
-                if (listView.getChildCount() == 1) {
-                    listView.setVisibility(View.VISIBLE);
-                }
-//                adapterForListView.notifyDataSetChanged();
+                showOrHidePlaceholder();
                 return true;
             }
             case R.id.menu_main_clear: {
-                NotesActions.clearAll();
-                if (listView.getChildCount() == 0) {
-                    listView.setVisibility(View.GONE);
-                }
-                adapterForListView.notifyDataSetChanged();
+                adapterForListView.clearAll();
+                showOrHidePlaceholder();
                 return true;
             }
             case R.id.menu_settings: {
@@ -117,13 +112,11 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
             case R.id.edit_note: {
-                NotesActions.editSelected(this, getPositionOfCheckedNote());
+                NotesActions.editSelected(this, adapterForListView.getSparseArray().keyAt(0));
                 return true;
             }
             case R.id.select_all: {
-                setCheckingForAllCheckBoxes(isSelectAll);
-                // TODO: avoid perform code in onCheckedChanged when SelectAll clicked
-                // isSelectAllClicked = true;
+                setCheckingForAllCheckBoxes();
                 return true;
             }
             case R.id.multiple_delete: {
@@ -142,22 +135,22 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        // TODO: using SparseBooleanArray instead of looping through all listView
-//        sbArray = new SparseBooleanArray();
+        adapterForListView.renewSparseArray();
 
         setVisibilityForAllCheckBox(View.VISIBLE);
-        setVisibilityOfMenuMainItems(DELETING_PROCESS_START);
+        setVisibilityForMenuMainItems(DELETING_PROCESS_START);
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         CheckBox checkBox = (CheckBox) info.targetView.findViewById(R.id.lv_check_box);
         checkBox.setChecked(true);
 
-//        sbArray.put(info.position, true);
+        adapterForListView.putIntoSparseArray(info.position, true);
     }
 
     private void initViews() {
         addNewNoteBtn = (FloatingActionButton) findViewById(R.id.fab);
         appBarLayout = (AppBarLayout) findViewById(R.id.main_app_bar_layout);
+        tvPlaceholder = (TextView) findViewById(R.id.there_is_no_notes);
         listView = (ListView) findViewById(R.id.list_notes);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
     }
@@ -183,24 +176,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void showDeleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Do you  want to delete selected record(s)?");
-        builder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO  Auto-generated method stub
-            }
-        });
-        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                CheckBox cbNote;
-                for (int i = listView.getChildCount() - 1; i >= 0 ; i--) {
-                    cbNote = (CheckBox) listView.getChildAt(i).findViewById(R.id.lv_check_box);
-                    if (cbNote.isChecked()) NotesData.deleteItem(i);
-                }
-                closeDeletingProcess();
-            }
-        });
+        builder.setMessage("Do you  want to delete selected record(s)?")
+                .setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO  Auto-generated method stub
+                    }
+                })
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        adapterForListView.removeSelected();
+                        closeDeletingProcess();
+                    }
+                });
         AlertDialog alert = builder.create();
         alert.setTitle("Confirmation");
         alert.show();
@@ -208,12 +197,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void closeDeletingProcess() {
         setVisibilityForAllCheckBox(View.GONE);
-        setVisibilityOfMenuMainItems(DELETING_PROCESS_END);
+        setVisibilityForMenuMainItems(DELETING_PROCESS_END);
         toolbar.setTitle("Notes");
-        checkedCount = 0;
-        if (listView.getChildCount() == 0) {
-            listView.setVisibility(View.GONE);
-        }
+        showOrHidePlaceholder();
     }
 
     private void setVisibilityForAllCheckBox(int visibility) {
@@ -222,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
             cbNote = (CheckBox) listView.getChildAt(i).findViewById(R.id.lv_check_box);
             cbNote.setVisibility(visibility);
             cbNote.setChecked(false);
+            cbNote.setText(String.valueOf(i));
             if (visibility == View.VISIBLE) {
                 setCheckBoxBehavior(cbNote);
             }
@@ -232,37 +219,29 @@ public class MainActivity extends AppCompatActivity {
         cbNote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    checkedCount++;
-                    if (checkedCount == listView.getChildCount()) isSelectAll = false;
-                } else {
-                    checkedCount--;
-                    isSelectAll = true;
-                }
-                toolbar.setTitle(checkedCount + "");
-                optionsMenu.findItem(R.id.edit_note).setVisible(checkedCount == 1);
+                adapterForListView.putIntoSparseArray(Integer.parseInt(buttonView.getText().toString()), isChecked);
+                isSelectAll = adapterForListView.isSelectAll();
+
+                toolbar.setTitle(adapterForListView.getSbArraySize() + "");
+                optionsMenu.findItem(R.id.edit_note).setVisible(adapterForListView.isOnly());
+
+                adapterForListView.notifyDataSetChanged();
             }
         });
     }
 
-    private int getPositionOfCheckedNote() {
+    private void setCheckingForAllCheckBoxes() {
         CheckBox cbNote;
-        for (int i = 0; i < listView.getChildCount(); i++) {
+        // If SelectAll was clicked -> inverse state of the CheckBox'es
+        boolean isChecked = !isSelectAll;
+        for (int i = 0; i < adapterForListView.getCount(); i++) {
             cbNote = (CheckBox) listView.getChildAt(i).findViewById(R.id.lv_check_box);
-            if (cbNote.isChecked()) return i;
-        }
-        return -1;
-    }
-
-    private void setCheckingForAllCheckBoxes(boolean checked) {
-        CheckBox cbNote;
-        for (int i = 0; i < listView.getChildCount(); i++) {
-            cbNote = (CheckBox) listView.getChildAt(i).findViewById(R.id.lv_check_box);
-            cbNote.setChecked(checked);
+            cbNote.setChecked(isChecked);
+            adapterForListView.putIntoSparseArray(i, isChecked);
         }
     }
 
-    private void setVisibilityOfMenuMainItems(boolean isProcess) {
+    private void setVisibilityForMenuMainItems(boolean isProcess) {
         // Main menu items
         optionsMenu.findItem(R.id.menu_main_add).setVisible(!isProcess);
         optionsMenu.findItem(R.id.menu_main_clear).setVisible(!isProcess);
@@ -271,5 +250,14 @@ public class MainActivity extends AppCompatActivity {
         optionsMenu.findItem(R.id.cancel_delete).setVisible(isProcess);
         optionsMenu.findItem(R.id.select_all).setVisible(isProcess);
         optionsMenu.findItem(R.id.multiple_delete).setVisible(isProcess);
+    }
+
+    private void showOrHidePlaceholder() {
+        if (adapterForListView.getCount() == 1) {
+            tvPlaceholder.setText("");
+        }
+        if (adapterForListView.getCount() == 0) {
+            tvPlaceholder.setText(R.string.there_is_no_notes);
+        }
     }
 }

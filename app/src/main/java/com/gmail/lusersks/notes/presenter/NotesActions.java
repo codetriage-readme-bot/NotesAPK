@@ -47,7 +47,7 @@ public class NotesActions {
         activity.startActivity(intent);
     }
 
-    public static void clearAll() {
+    /*public static void clearAll() {
         NotesData.clearItems();
-    }
+    }*/
 }

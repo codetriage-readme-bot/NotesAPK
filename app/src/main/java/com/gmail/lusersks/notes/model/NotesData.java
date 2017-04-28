@@ -58,13 +58,13 @@ public class NotesData {
 
         String fileName = "note" + index;
 
-        Log.d("appLog", "NOTE: " + noteTitle + " - is deleted");
+//        Log.d("appLog", "NOTE: " + noteTitle + " - is deleted");
 
         // TODO: delete file with note
     }
 
     public static void deleteItem(int index) {
-        Log.d("appLog", "NOTE: " + listNotes.get(index) + " - is deleted");
+//        Log.d("appLog", "NOTE: " + listNotes.get(index) + " - is deleted");
 
         listNotes.remove(index);
         listContents.remove(index);
@@ -119,6 +119,10 @@ public class NotesData {
 
     public static String getNote(int index) {
         return listNotes.get(index);
+    }
+
+    public static ArrayList<String> getNotes() {
+        return (ArrayList<String>) listNotes;
     }
 
     public static String getContext(String note) {
