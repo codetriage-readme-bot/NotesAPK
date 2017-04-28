@@ -1,4 +1,4 @@
-package com.gmail.lusersks.notes.data;
+package com.gmail.lusersks.notes.model;
 
 import android.content.Context;
 import android.util.Log;
@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class NotesData {
-
-    public static final String NOTE_TITLE = "title";
+    private static final String NOTE_TITLE = "title";
 
     private static List<String> listNotes = new ArrayList<>();
     private static List<String> listContents = new ArrayList<>();

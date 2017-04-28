@@ -1,11 +1,10 @@
-package com.gmail.lusersks.notes.data;
+package com.gmail.lusersks.notes.model;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.gmail.lusersks.notes.R;

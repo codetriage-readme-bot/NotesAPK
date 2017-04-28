@@ -9,13 +9,11 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.gmail.lusersks.notes.MainActivity;
-import com.gmail.lusersks.notes.data.NotesData;
+import com.gmail.lusersks.notes.model.NotesData;
 import com.gmail.lusersks.notes.R;
 
 public class FormActivity extends AppCompatActivity {
-
-    private EditText etNoteTitle;
-    private EditText etNoteContent;
+    private EditText etNoteTitle, etNoteContent;
     private Intent intent;
     private String oldTitle;
 
@@ -24,8 +22,7 @@ public class FormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form);
 
-        etNoteTitle = (EditText) findViewById(R.id.et_note_title);
-        etNoteContent = (EditText) findViewById(R.id.et_note_content);
+        initViews();
 
         intent = this.getIntent();
         setTitle(intent.getStringExtra(MainActivity.EXTRA_FORM_TITLE));
@@ -33,6 +30,11 @@ public class FormActivity extends AppCompatActivity {
         etNoteTitle.setText(oldTitle);
         etNoteContent.setText(intent.getStringExtra(MainActivity.EXTRA_CONTENT));
 
+    }
+
+    private void initViews() {
+        etNoteTitle = (EditText) findViewById(R.id.et_note_title);
+        etNoteContent = (EditText) findViewById(R.id.et_note_content);
     }
 
     @Override

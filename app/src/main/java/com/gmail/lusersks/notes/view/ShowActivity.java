@@ -12,24 +12,29 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.gmail.lusersks.notes.MainActivity;
-import com.gmail.lusersks.notes.controller.NotesActions;
-import com.gmail.lusersks.notes.data.NotesData;
+import com.gmail.lusersks.notes.presenter.NotesActions;
+import com.gmail.lusersks.notes.model.NotesData;
 import com.gmail.lusersks.notes.R;
 
 public class ShowActivity extends AppCompatActivity {
-
-    public TextView tvShowNote;
-    public TextView tvShowContent;
+    public TextView tvShowNote, tvShowContent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show);
 
+        initViews();
+        Intent intent = this.getIntent();
+        setTextForTextNotes(intent);
+    }
+
+    private void initViews() {
         tvShowNote = (TextView) findViewById(R.id.tvShowNote);
         tvShowContent = (TextView) findViewById(R.id.tvShowContent);
+    }
 
-        Intent intent = this.getIntent();
+    private void setTextForTextNotes(Intent intent) {
         tvShowNote.setText(intent.getStringExtra(MainActivity.EXTRA_NOTE));
         tvShowContent.setText(intent.getStringExtra(MainActivity.EXTRA_CONTENT));
     }
@@ -58,11 +63,9 @@ public class ShowActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_OK) {
-            tvShowNote.setText(data.getStringExtra(MainActivity.EXTRA_NOTE));
-            tvShowContent.setText(data.getStringExtra(MainActivity.EXTRA_CONTENT));
-
+            setTextForTextNotes(intent);
             Snackbar.make(tvShowNote, "The note is edited", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }

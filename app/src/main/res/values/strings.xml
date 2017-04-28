@@ -18,4 +18,5 @@
     <string name="select_all">Select All</string>
     <string name="cancel_delete">Cancel</string>
     <string name="edit_note">Edit</string>
+    <string name="there_is_no_notes">There is no notes</string>
 </resources>

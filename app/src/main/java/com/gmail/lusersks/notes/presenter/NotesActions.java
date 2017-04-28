@@ -1,10 +1,9 @@
-package com.gmail.lusersks.notes.controller;
+package com.gmail.lusersks.notes.presenter;
 
 import android.app.Activity;
 import android.content.Intent;
 
-import com.gmail.lusersks.notes.MainActivity;
-import com.gmail.lusersks.notes.data.NotesData;
+import com.gmail.lusersks.notes.model.NotesData;
 import com.gmail.lusersks.notes.view.FormActivity;
 import com.gmail.lusersks.notes.view.ShowActivity;
 
