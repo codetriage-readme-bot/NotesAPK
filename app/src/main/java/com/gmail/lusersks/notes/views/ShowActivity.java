@@ -1,4 +1,4 @@
-package com.gmail.lusersks.notes.view;
+package com.gmail.lusersks.notes.views;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,8 +12,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.gmail.lusersks.notes.MainActivity;
-import com.gmail.lusersks.notes.presenter.NotesActions;
-import com.gmail.lusersks.notes.model.NotesData;
+import com.gmail.lusersks.notes.presenters.NotesActions;
+import com.gmail.lusersks.notes.models.NotesData;
 import com.gmail.lusersks.notes.R;
 
 public class ShowActivity extends AppCompatActivity {

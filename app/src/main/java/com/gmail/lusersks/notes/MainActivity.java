@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.View;
 import android.view.Menu;
@@ -20,10 +21,10 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.gmail.lusersks.notes.presenter.NotesActions;
-import com.gmail.lusersks.notes.model.NotesData;
-import com.gmail.lusersks.notes.presenter.SimpleNotesAdapter;
-import com.gmail.lusersks.notes.view.PreferencesActivity;
+import com.gmail.lusersks.notes.presenters.NotesActions;
+import com.gmail.lusersks.notes.models.NotesData;
+import com.gmail.lusersks.notes.presenters.SimpleNotesAdapter;
+import com.gmail.lusersks.notes.views.PreferencesActivity;
 
 public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_NOTE = "extra_note";
@@ -50,10 +51,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initViews();
+        initDBHelper();
         setAddNoteBehavior();
 
         setSupportActionBar(toolbar);
-        NotesData.loadItems(this);
     }
 
     @Override
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 1) {
             Snackbar.make(addNewNoteBtn, "New note is added", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
+            showOrHidePlaceholder();
         }
         if (requestCode == 3) {
             Snackbar.make(addNewNoteBtn, "The note is edited", Snackbar.LENGTH_LONG)
@@ -96,9 +98,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_main_add: {
-                // TODO do it through adapter
                 NotesActions.addNew(MainActivity.this);
-                showOrHidePlaceholder();
+                //Always go to the onActivityResult
                 return true;
             }
             case R.id.menu_main_clear: {
@@ -155,12 +156,17 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
     }
 
+    private void initDBHelper() {
+        NotesData.initDBHelper(this);
+    }
+
     private void setAddNoteBehavior() {
         addNewNoteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NotesActions.addNew(MainActivity.this);
                 adapterForListView.notifyDataSetChanged();
+                showOrHidePlaceholder();
             }
         });
     }
@@ -253,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showOrHidePlaceholder() {
+        Log.d("appLog", "Placeholder: count of items = " + adapterForListView.getCount());
         if (adapterForListView.getCount() == 1) {
             tvPlaceholder.setText("");
         }

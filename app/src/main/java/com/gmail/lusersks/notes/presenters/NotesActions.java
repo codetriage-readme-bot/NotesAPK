@@ -1,11 +1,11 @@
-package com.gmail.lusersks.notes.presenter;
+package com.gmail.lusersks.notes.presenters;
 
 import android.app.Activity;
 import android.content.Intent;
 
-import com.gmail.lusersks.notes.model.NotesData;
-import com.gmail.lusersks.notes.view.FormActivity;
-import com.gmail.lusersks.notes.view.ShowActivity;
+import com.gmail.lusersks.notes.models.NotesData;
+import com.gmail.lusersks.notes.views.FormActivity;
+import com.gmail.lusersks.notes.views.ShowActivity;
 
 import static com.gmail.lusersks.notes.MainActivity.EXTRA_CONTENT;
 import static com.gmail.lusersks.notes.MainActivity.EXTRA_FORM_TITLE;

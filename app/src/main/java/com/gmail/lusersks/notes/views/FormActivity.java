@@ -1,4 +1,4 @@
-package com.gmail.lusersks.notes.view;
+package com.gmail.lusersks.notes.views;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.gmail.lusersks.notes.MainActivity;
-import com.gmail.lusersks.notes.model.NotesData;
+import com.gmail.lusersks.notes.models.NotesData;
 import com.gmail.lusersks.notes.R;
 
 public class FormActivity extends AppCompatActivity {
@@ -52,9 +52,9 @@ public class FormActivity extends AppCompatActivity {
             String content = etNoteContent.getText().toString();
 
             if (getTitle().equals("New note")) {
-                NotesData.addItem(this, title, content);
+                NotesData.addItem(title, content);
             } else {
-                NotesData.editItem(this, oldTitle, title, content);
+                NotesData.editItem(oldTitle, title, content);
                 intent.putExtra(MainActivity.EXTRA_NOTE, title);
                 intent.putExtra(MainActivity.EXTRA_CONTENT, content);
             }

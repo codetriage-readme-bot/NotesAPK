@@ -1,20 +1,16 @@
-package com.gmail.lusersks.notes.presenter;
+package com.gmail.lusersks.notes.presenters;
 
 import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.util.SparseBooleanArray;
-import android.view.LayoutInflater;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.gmail.lusersks.notes.MainActivity;
 import com.gmail.lusersks.notes.R;
-import com.gmail.lusersks.notes.model.NotesData;
-
-import java.util.ArrayList;
+import com.gmail.lusersks.notes.models.NotesData;
 
 public class SimpleNotesAdapter extends ArrayAdapter<String> {
 
@@ -24,12 +20,12 @@ public class SimpleNotesAdapter extends ArrayAdapter<String> {
     public SimpleNotesAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId) {
         super(context, resource, textViewResourceId);
         this.context = context;
+        this.addAll(NotesData.getNotes());
         sbArray = new SparseBooleanArray();
-        addAll(NotesData.getNotes());
     }
 
     public int getCount() {
-        return NotesData.getItems().size();
+        return NotesData.getNotes().size();
     }
 
     public void clearAll() {
@@ -66,7 +62,7 @@ public class SimpleNotesAdapter extends ArrayAdapter<String> {
     }
 
     public boolean isSelectAll() {
-        return sbArray.size() == NotesData.getItems().size();
+        return sbArray.size() == NotesData.getNotes().size();
     }
 
     public int getSbArraySize() {
