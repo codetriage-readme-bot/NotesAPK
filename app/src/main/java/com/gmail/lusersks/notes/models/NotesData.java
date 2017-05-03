@@ -6,76 +6,97 @@ import com.gmail.lusersks.notes.database.DBHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.gmail.lusersks.notes.presenters.NotesActions.FLAG_TODO;
+
 public class NotesData {
-    private static List<String> listNotes = new ArrayList<>();
-    private static List<String> listContents = new ArrayList<>();
+    private static List<String> listItems = new ArrayList<>();
+    private static List<String> listItemsContents = new ArrayList<>();
+    private static List<String> listItemsTypes = new ArrayList<>();
+
     private static DBHelper dbHelper;
 
     public static void initDBHelper(MainActivity activity) {
         dbHelper = new DBHelper(activity);
 
-        listNotes.clear();
-        listContents.clear();
+        listItems.clear();
+        listItemsContents.clear();
+        listItemsTypes.clear();
 
         List<List<String>> list = dbHelper.getRecords();
-        listNotes.addAll(list.get(0));
-        listContents.addAll(list.get(1));
+        listItems.addAll(list.get(0));
+        listItemsContents.addAll(list.get(1));
+        listItemsTypes.addAll(list.get(2));
     }
 
-    public static void addItem(String title, String content) {
-        listNotes.add(title);
-        listContents.add(content);
+    public static void addItem(String title, String content, String itemType) {
+        listItems.add(title);
+        listItemsContents.add(content);
+        listItemsTypes.add(itemType);
 
-        dbHelper.insertRecord(title, content);
+        dbHelper.insertRecord(title, content, itemType);
     }
 
-    public static void editItem(String oldTitle, String title, String content) {
-        int index = findIndexByNoteTitle(oldTitle);
-        listNotes.set(index, title);
-        listContents.set(index, content);
+    public static void editItem(String oldTitle, String title, String content, String itemType) {
+        int index = findIndexByTitle(oldTitle);
+        listItems.set(index, title);
+        listItemsContents.set(index, content);
+        listItemsTypes.set(index, itemType);
 
-        dbHelper.updateRecord(index + 1, title, content);
+        dbHelper.updateRecord(index + 1, title, content, itemType);
     }
 
     public static void deleteItem(String noteTitle) {
-        int index = findIndexByNoteTitle(noteTitle);
-        listNotes.remove(index);
-        listContents.remove(index);
+        int index = findIndexByTitle(noteTitle);
+        listItems.remove(index);
+        listItemsContents.remove(index);
+        listItemsTypes.remove(index);
 
         dbHelper.deleteRecord(index);
     }
 
     public static void deleteItem(int index) {
-        listNotes.remove(index);
-        listContents.remove(index);
+        listItems.remove(index);
+        listItemsContents.remove(index);
+        listItemsTypes.remove(index);
 
         dbHelper.deleteRecord(index);
     }
 
     public static void clearItems() {
-        listNotes.clear();
-        listContents.clear();
+        listItems.clear();
+        listItemsContents.clear();
+        listItemsTypes.clear();
 
         dbHelper.clearDB();
     }
 
     public static String getNote(int index) {
-        return listNotes.get(index);
+        return listItems.get(index);
     }
 
     public static ArrayList<String> getNotes() {
-        return (ArrayList<String>) listNotes;
+        return (ArrayList<String>) listItems;
     }
 
-    public static String getContext(String note) {
-        int index = findIndexByNoteTitle(note);
-        return listContents.get(index);
+    public static ArrayList<String> getTodos() {
+        ArrayList<String> listTodos = new ArrayList<>();
+        for (int i = 0; i < listItems.size(); i++) {
+            if (listItemsTypes.get(i).equals(FLAG_TODO)) {
+                listTodos.add(listItems.get(i));
+            }
+        }
+        return listTodos;
     }
 
-    private static int findIndexByNoteTitle(String title) {
+    public static String getContext(String title) {
+        int index = findIndexByTitle(title);
+        return listItemsContents.get(index);
+    }
+
+    private static int findIndexByTitle(String title) {
         int index = -1;
-        for (int i = 0; i < listNotes.size(); i++) {
-            if (listNotes.get(i).equals(title)) {
+        for (int i = 0; i < listItems.size(); i++) {
+            if (listItems.get(i).equals(title)) {
                 index = i;
             }
         }

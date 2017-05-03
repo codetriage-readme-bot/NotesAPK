@@ -5,19 +5,26 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gmail.lusersks.notes.MainActivity;
 import com.gmail.lusersks.notes.presenters.NotesActions;
-import com.gmail.lusersks.notes.models.NotesData;
 import com.gmail.lusersks.notes.R;
+import com.gmail.lusersks.notes.presenters.ParseTodoAdapter;
 
 public class ShowActivity extends AppCompatActivity {
-    public TextView tvShowNote, tvShowContent;
+    public TextView tvItemTitle, tvNoteContent;
+    private ListView lvTodoList;
+    private ParseTodoAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -25,18 +32,59 @@ public class ShowActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show);
 
         initViews();
-        Intent intent = this.getIntent();
-        setTextForTextNotes(intent);
+        Intent intent = getIntent();
+        readExtraFields(intent);
+        setTypeToTitle();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        initListView();
     }
 
     private void initViews() {
-        tvShowNote = (TextView) findViewById(R.id.tvShowNote);
-        tvShowContent = (TextView) findViewById(R.id.tvShowContent);
+        tvItemTitle = (TextView) findViewById(R.id.tv_show_title);
+        tvNoteContent = (TextView) findViewById(R.id.tv_note_content);
+        lvTodoList = (ListView) findViewById(R.id.lv_todo_list);
     }
 
-    private void setTextForTextNotes(Intent intent) {
-        tvShowNote.setText(intent.getStringExtra(MainActivity.EXTRA_NOTE));
-        tvShowContent.setText(intent.getStringExtra(MainActivity.EXTRA_CONTENT));
+    private void readExtraFields(Intent intent) {
+        tvItemTitle.setText(intent.getStringExtra(MainActivity.EXTRA_NOTE));
+        tvNoteContent.setText(intent.getStringExtra(MainActivity.EXTRA_CONTENT));
+    }
+
+    private void setTypeToTitle() {
+        String str = tvNoteContent.getText().toString();
+        String type = (str.charAt(0) == '*' || str.charAt(0) == '-') ? "Todo" : "Note";
+        setTitle(type);
+    }
+
+    private void initListView() {
+        String str = tvNoteContent.getText().toString();
+        if (str.charAt(0) == '*' || str.charAt(0) == '-') {
+            adapter = new ParseTodoAdapter(this,
+                    R.layout.todo_list_view,
+                    R.id.tv_todo_task,
+                    tvItemTitle.getText().toString()
+            );
+
+            lvTodoList.setAdapter(adapter);
+            lvTodoList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+
+            lvTodoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    CheckBox cb = (CheckBox) view.findViewById(R.id.cb_todo_done);
+                    cb.setChecked(!cb.isChecked());
+                    adapter.toggleCbState(position);
+                }
+            });
+
+            tvNoteContent.setVisibility(View.GONE);
+            lvTodoList.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -49,7 +97,9 @@ public class ShowActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_show_item_edit: {
-                NotesActions.editSelected(ShowActivity.this);
+                String str = tvNoteContent.getText().toString();
+                String type = (str.charAt(0) == '*' || str.charAt(0) == '-') ? "todo" : "note";
+                NotesActions.editSelected(ShowActivity.this, type);
                 return true;
             }
             case R.id.menu_show_item_delete: {
@@ -65,16 +115,15 @@ public class ShowActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_OK) {
-            setTextForTextNotes(intent);
-            Snackbar.make(tvShowNote, "The note is edited", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+            readExtraFields(intent);
+            Toast.makeText(this, "The note is edited", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("noteTitle", tvShowNote.getText().toString());
+        outState.putString("noteTitle", tvItemTitle.getText().toString());
     }
 
     private void showDeleteDialog() {
@@ -89,12 +138,20 @@ public class ShowActivity extends AppCompatActivity {
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        NotesData.deleteItem((String) tvShowNote.getText());
+                        NotesActions.deleteSelected(tvItemTitle.getText().toString());
                         finish();
                     }
                 });
         AlertDialog alert = builder.create();
         alert.setTitle("Confirmation");
         alert.show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Exit from the activity -> Save cb state to DB
+        adapter.saveCbState();
     }
 }

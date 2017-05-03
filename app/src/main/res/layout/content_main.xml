@@ -15,7 +15,7 @@
         android:paddingLeft="100dp"
         android:paddingStart="100dp"
         android:paddingTop="200dp"
-        android:text="" />
+        android:text="@string/there_is_no_notes" />
 
     <ListView
         android:id="@+id/list_notes"

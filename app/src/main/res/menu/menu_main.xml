@@ -4,22 +4,10 @@
     tools:context="com.gmail.lusersks.notes.MainActivity">
 
     <item
-        android:id="@+id/menu_main_add"
-        android:icon="@drawable/ic_add_circle_outline_black_24dp"
-        android:title="@string/menu_main_add"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/menu_main_clear"
         android:orderInCategory="1"
         android:title="@string/menu_main_clear"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/menu_settings"
-        android:orderInCategory="2"
-        android:title="@string/menu_settings"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/edit_note"
@@ -27,30 +15,34 @@
         android:orderInCategory="11"
         android:title="@string/edit_note"
         android:visible="false"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
 
-    <item
-        android:id="@+id/select_all"
-        android:icon="@drawable/ic_done_all_black_24dp"
-        android:orderInCategory="12"
-        android:title="@string/select_all"
-        android:visible="false"
-        app:showAsAction="always" />
+    <group android:id="@+id/context_view_items">
+        <item
+            android:id="@+id/select_all"
+            android:icon="@drawable/ic_done_all"
+            android:orderInCategory="12"
+            android:title="@string/select_all"
+            android:visible="false"
+            app:showAsAction="always" />
 
-    <item
-        android:id="@+id/multiple_delete"
-        android:icon="@drawable/ic_delete_black_24dp"
-        android:orderInCategory="13"
-        android:title="@string/multiple_delete"
-        android:visible="false"
-        app:showAsAction="always" />
+        <item
+            android:id="@+id/multiple_delete"
+            android:icon="@drawable/ic_delete"
+            android:orderInCategory="13"
+            android:title="@string/multiple_delete"
+            android:visible="false"
+            app:showAsAction="always" />
 
-    <item
-        android:id="@+id/cancel_delete"
-        android:icon="@drawable/ic_clear_black_24dp"
-        android:orderInCategory="14"
-        android:title="@string/cancel_delete"
-        android:visible="false"
-        app:showAsAction="always" />
+        <item
+            android:id="@+id/cancel_delete"
+            android:icon="@drawable/ic_clear"
+            android:orderInCategory="14"
+            android:title="@string/cancel_delete"
+            android:visible="false"
+            app:showAsAction="always" />
+
+    </group>
 
 </menu>

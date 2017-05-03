@@ -20,7 +20,7 @@ public class SimpleNotesAdapter extends ArrayAdapter<String> {
     public SimpleNotesAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId) {
         super(context, resource, textViewResourceId);
         this.context = context;
-        this.addAll(NotesData.getNotes());
+        addAll(NotesData.getNotes());
         sbArray = new SparseBooleanArray();
     }
 
@@ -43,7 +43,7 @@ public class SimpleNotesAdapter extends ArrayAdapter<String> {
 
     private void remove(int position) {
         MainActivity mainActivity = (MainActivity) this.context;
-        TextView textView = (TextView) mainActivity.listView.getChildAt(position).findViewById(R.id.tv_note_title);
+        TextView textView = (TextView) mainActivity.listView.getChildAt(position).findViewById(R.id.tv_list_view_item);
         String item = textView.getText().toString();
         remove(item);
         NotesData.deleteItem(position);

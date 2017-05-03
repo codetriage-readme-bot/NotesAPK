@@ -4,32 +4,50 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
-import com.gmail.lusersks.notes.MainActivity;
 import com.gmail.lusersks.notes.models.NotesData;
 import com.gmail.lusersks.notes.R;
+
+import static com.gmail.lusersks.notes.MainActivity.EXTRA_CONTENT;
+import static com.gmail.lusersks.notes.MainActivity.EXTRA_FORM_TITLE;
+import static com.gmail.lusersks.notes.MainActivity.EXTRA_NOTE;
+import static com.gmail.lusersks.notes.presenters.NotesActions.EXTRA_TYPE;
 
 public class FormActivity extends AppCompatActivity {
     private EditText etNoteTitle, etNoteContent;
     private Intent intent;
-    private String oldTitle;
+    private String oldTitle, itemType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form);
 
+        intent = getIntent();
+
         initViews();
+        readExtraFields();
+    }
 
-        intent = this.getIntent();
-        setTitle(intent.getStringExtra(MainActivity.EXTRA_FORM_TITLE));
-        oldTitle = intent.getStringExtra(MainActivity.EXTRA_NOTE);
+    private void readExtraFields() {
+        setTitle(intent.getStringExtra(EXTRA_FORM_TITLE));
+
+        oldTitle = intent.getStringExtra(EXTRA_NOTE);
+        String content = intent.getStringExtra(EXTRA_CONTENT);
+
+        itemType = intent.getStringExtra(EXTRA_TYPE);
+        if (itemType.equals("todo")) {
+            if (content.isEmpty()) content = "- ";
+        }
+
         etNoteTitle.setText(oldTitle);
-        etNoteContent.setText(intent.getStringExtra(MainActivity.EXTRA_CONTENT));
-
+        etNoteContent.setText(content);
     }
 
     private void initViews() {
@@ -48,15 +66,21 @@ public class FormActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.menu_form_save) {
+//            Log.d("appLog", "R.id.menu_form_save");
+//            Log.d("appLog", "getTitle() = " + getTitle());
+
             String title = etNoteTitle.getText().toString();
             String content = etNoteContent.getText().toString();
 
-            if (getTitle().equals("New note")) {
-                NotesData.addItem(title, content);
-            } else {
-                NotesData.editItem(oldTitle, title, content);
-                intent.putExtra(MainActivity.EXTRA_NOTE, title);
-                intent.putExtra(MainActivity.EXTRA_CONTENT, content);
+            if (getTitle().equals("New Note")) {
+//                Log.d("appLog", "NotesData.addItem");
+                NotesData.addItem(title, content, itemType);
+            }
+            if (getTitle().equals("Edit Note")) {
+//                Log.d("appLog", "NotesData.editItem");
+                NotesData.editItem(oldTitle, title, content, itemType);
+                intent.putExtra(EXTRA_NOTE, title);
+                intent.putExtra(EXTRA_CONTENT, content);
             }
 
             setResult(RESULT_OK, intent);
