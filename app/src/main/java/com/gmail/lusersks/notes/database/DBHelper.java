@@ -11,23 +11,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.gmail.lusersks.notes.provider.Constants.COL_BODY;
+import static com.gmail.lusersks.notes.provider.Constants.COL_ID;
+import static com.gmail.lusersks.notes.provider.Constants.COL_TITLE;
+import static com.gmail.lusersks.notes.provider.Constants.COL_TYPE;
+import static com.gmail.lusersks.notes.provider.Constants.NOTES_DB;
+import static com.gmail.lusersks.notes.provider.Constants.NOTES_TABLE;
+
 public class DBHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "notesDB";
-    private static final String TABLE_NAME = "notesAndTodos";
-
-    private static final String COLUMN_TITLE = "title";
-    private static final String COLUMN_BODY = "body";
-    private static final String COLUMN_TYPE = "type";
-
     private static final String CREATE_TABLE_QUERY =
-            "create table " + TABLE_NAME + " ("
-            + "id integer primary key autoincrement, "
-            + "title text, "
-            + "body text, "
-            + "type varchar);";
+            "create table if not exist " + NOTES_TABLE + " ("
+            + COL_ID + " integer primary key autoincrement, "
+            + COL_TITLE + " text, "
+            + COL_BODY + " text, "
+            + COL_TYPE + " varchar);";
 
     public DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, NOTES_DB, null, 1);
     }
 
     @Override
@@ -41,28 +41,28 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void insertRecord(String noteTitle, String noteBody, String itemType) {
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_TITLE, noteTitle);
-        cv.put(COLUMN_BODY, noteBody);
-        cv.put(COLUMN_TYPE, itemType);
+        cv.put(COL_TITLE, noteTitle);
+        cv.put(COL_BODY, noteBody);
+        cv.put(COL_TYPE, itemType);
 
-        long rowID = getWritableDatabase().insert(TABLE_NAME, null, cv);
+        long rowID = getWritableDatabase().insert(NOTES_TABLE, null, cv);
 
         Log.d("appLog", "Log inserted, ID = " + rowID);
     }
 
     public void updateRecord(int index, String noteTitle, String noteBody, String itemType) {
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_TITLE, noteTitle);
-        cv.put(COLUMN_BODY, noteBody);
-        cv.put(COLUMN_TYPE, itemType);
+        cv.put(COL_TITLE, noteTitle);
+        cv.put(COL_BODY, noteBody);
+        cv.put(COL_TYPE, itemType);
 
-        long rowID = getWritableDatabase().update(TABLE_NAME, cv, "id = " + index, null);
+        long rowID = getWritableDatabase().update(NOTES_TABLE, cv, COL_ID + " = " + index, null);
 
         Log.d("appLog", "Log updated, ID = " + rowID);
     }
 
     public void deleteRecord(int index) {
-        long rowID = getWritableDatabase().delete(TABLE_NAME, "id = " + index, null);
+        long rowID = getWritableDatabase().delete(NOTES_TABLE, COL_ID + " = " + index, null);
 
         Log.d("appLog", "Log updated, ID = " + rowID);
     }
@@ -70,7 +70,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void clearDB() {
         SQLiteDatabase db = getWritableDatabase();
 
-        db.execSQL("drop table " + TABLE_NAME + ";");
+        db.execSQL("drop table " + NOTES_TABLE + ";");
         db.execSQL(CREATE_TABLE_QUERY);
     }
 
@@ -79,12 +79,12 @@ public class DBHelper extends SQLiteOpenHelper {
         List<String> listOfContents = new ArrayList<>();
         List<String> listOfTypes = new ArrayList<>();
 
-        Cursor cursor = getReadableDatabase().query(TABLE_NAME, null, null, null, null, null, null);
+        Cursor cursor = getReadableDatabase().query(NOTES_TABLE, null, null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
-            int titleColumnIndex = cursor.getColumnIndex(COLUMN_TITLE);
-            int bodyColumnIndex = cursor.getColumnIndex(COLUMN_BODY);
-            int typeColumnIndex = cursor.getColumnIndex(COLUMN_TYPE);
+            int titleColumnIndex = cursor.getColumnIndex(COL_TITLE);
+            int bodyColumnIndex = cursor.getColumnIndex(COL_BODY);
+            int typeColumnIndex = cursor.getColumnIndex(COL_TYPE);
 
             do {
                 String noteTitle = cursor.getString(titleColumnIndex);

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +26,7 @@ public class ShowActivity extends AppCompatActivity {
     public TextView tvItemTitle, tvNoteContent;
     private ListView lvTodoList;
     private ParseTodoAdapter adapter;
+    private boolean isTodo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,17 +55,18 @@ public class ShowActivity extends AppCompatActivity {
     private void readExtraFields(Intent intent) {
         tvItemTitle.setText(intent.getStringExtra(MainActivity.EXTRA_NOTE));
         tvNoteContent.setText(intent.getStringExtra(MainActivity.EXTRA_CONTENT));
+        String str = tvNoteContent.getText().toString();
+        Log.d("appLog", str);
+        isTodo = str.charAt(0) == '*' || str.charAt(0) == '-';
     }
 
     private void setTypeToTitle() {
-        String str = tvNoteContent.getText().toString();
-        String type = (str.charAt(0) == '*' || str.charAt(0) == '-') ? "Todo" : "Note";
+        String type = isTodo ? "Todo" : "Note";
         setTitle(type);
     }
 
     private void initListView() {
-        String str = tvNoteContent.getText().toString();
-        if (str.charAt(0) == '*' || str.charAt(0) == '-') {
+        if (isTodo) {
             adapter = new ParseTodoAdapter(this,
                     R.layout.todo_list_view,
                     R.id.tv_todo_task,
@@ -97,8 +100,7 @@ public class ShowActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_show_item_edit: {
-                String str = tvNoteContent.getText().toString();
-                String type = (str.charAt(0) == '*' || str.charAt(0) == '-') ? "todo" : "note";
+                String type = isTodo ? "todo" : "note";
                 NotesActions.editSelected(ShowActivity.this, type);
                 return true;
             }
@@ -152,6 +154,6 @@ public class ShowActivity extends AppCompatActivity {
         super.onPause();
 
         // Exit from the activity -> Save cb state to DB
-        adapter.saveCbState();
+        if (isTodo) adapter.saveCbState();
     }
 }

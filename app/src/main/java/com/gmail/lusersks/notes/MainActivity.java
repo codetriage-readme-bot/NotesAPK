@@ -3,12 +3,12 @@ package com.gmail.lusersks.notes;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,12 +19,12 @@ import android.view.ContextMenu;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +32,10 @@ import com.gmail.lusersks.notes.presenters.NotesActions;
 import com.gmail.lusersks.notes.models.NotesData;
 import com.gmail.lusersks.notes.presenters.SimpleNotesAdapter;
 import com.gmail.lusersks.notes.views.PreferencesActivity;
+
+import static com.gmail.lusersks.notes.provider.Constants.COL_ID;
+import static com.gmail.lusersks.notes.provider.Constants.COL_TITLE;
+import static com.gmail.lusersks.notes.provider.Constants.NOTES_CONTENT_URI;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -47,11 +51,13 @@ public class MainActivity extends AppCompatActivity
     private TextView tvPlaceholder;
 
     private RadioButton rbFabNote;
-    public SimpleNotesAdapter adapterForListView;
+    public SimpleNotesAdapter adapter;
     public AppBarLayout appBarLayout;
     public ListView listView;
     public Toolbar toolbar;
     public Menu optionsMenu;
+
+    private SimpleCursorAdapter cursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +91,7 @@ public class MainActivity extends AppCompatActivity
         addNewNoteBtn.setOnClickListener(this);
     }
 
+    @SuppressWarnings("deprecation")
     private void initLeftNavigationBar() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -96,19 +103,57 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onResume() {
         super.onResume();
 
-        adapterForListView = new SimpleNotesAdapter(this, R.layout.list_view, R.id.tv_list_view_item);
-        listView.setAdapter(adapterForListView);
-        listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        final String[] PROJECTION = new String[] {COL_ID, COL_TITLE};
+
+        // Performs a "managed query" to the ContentProvider. The Activity
+        // will handle closing and requerying the cursor.
+        //
+        // WARNING!! This query (and any subsequent re-queries) will be
+        // performed on the UI Thread!!
+        Cursor cursor = managedQuery(
+                NOTES_CONTENT_URI,  // The Uri constant in the ContentProvider class
+                PROJECTION,         // The column to return for each data row
+                null,               // No where clause
+                null,               // No where clause
+                null);              // No sort order
+
+        String[] dataColumns = { COL_TITLE };
+        int[] viewIDs = { R.id.tv_list_view_item };
+
+        // Create the backing adapter for the ListView
+        //
+        // WARNING!! While not readily obvious, using this constructor will
+        // tell the CursorAdapter to register a ContentObserver that will
+        // monitor the underlying data source. As part of the monitoring
+        // process, the ContentObserver will call requery() on the cursor
+        // each time the data is updated. Since Cursor#requery() is performed
+        // on the UI thread, this constructor should be avoided at all costs!
+        cursorAdapter = new SimpleCursorAdapter(
+                this,               // The Activity context
+                R.layout.list_view, // Points to the XML for a listView
+                cursor,             // Cursor that contain the data to display
+                dataColumns,        // Bind the data in column COL_TITLE...
+                viewIDs             // ...to the TextView with id "R.id.tv_list_view_item"
+        );
+        //NotesCursorAdapter ncAdapter = new NotesCursorAdapter(this, cursor);
+        // old adapter
+        //adapter = new SimpleNotesAdapter(this, R.layout.list_view, R.id.tv_list_view_item);
+
+        // Set the ListView's adapter to be the cursor adapter that was just created
+        listView.setAdapter(cursorAdapter);
+
+        //listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
         setListViewBehavior();
-        registerForContextMenu(listView);
+        //registerForContextMenu(listView);
 
-        listView.setVisibility(View.VISIBLE);
-        if (adapterForListView.getCount() != 0) tvPlaceholder.setVisibility(View.GONE);
+        //listView.setVisibility(View.VISIBLE);
+        if (cursorAdapter.getCount() != 0) tvPlaceholder.setVisibility(View.GONE);
     }
 
     @Override
@@ -140,23 +185,23 @@ public class MainActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             case R.id.menu_main_clear: {
-                adapterForListView.clearAll();
+                adapter.clearAll();
                 showOrHidePlaceholder();
                 break;
             }
             case R.id.edit_note: {
                 String type = rbFabNote.isChecked() ? "note" : "todo";
-                NotesActions.editSelected(this, adapterForListView.getSparseArray().keyAt(0), type);
+                NotesActions.editSelected(this, adapter.getSparseArray().keyAt(0), type);
                 break;
             }
             case R.id.select_all: {
                 CheckBox cbNote;
                 // If SelectAll was clicked -> inverse state of the CheckBox'es
                 boolean isChecked = !isSelectAll;
-                for (int i = 0; i < adapterForListView.getCount(); i++) {
+                for (int i = 0; i < adapter.getCount(); i++) {
                     cbNote = (CheckBox) listView.getChildAt(i).findViewById(R.id.lv_check_box);
                     cbNote.setChecked(isChecked);
-                    adapterForListView.putIntoSparseArray(i, isChecked);
+                    adapter.putIntoSparseArray(i, isChecked);
                 }
                 break;
             }
@@ -178,7 +223,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        adapterForListView.renewSparseArray();
+        adapter.renewSparseArray();
 
         setVisibilityForAllCheckBox(View.VISIBLE);
         optionsMenu.findItem(R.id.menu_main_clear).setVisible(false);
@@ -188,7 +233,7 @@ public class MainActivity extends AppCompatActivity
         CheckBox checkBox = (CheckBox) info.targetView.findViewById(R.id.lv_check_box);
         checkBox.setChecked(true);
 
-        adapterForListView.putIntoSparseArray(info.position, true);
+        adapter.putIntoSparseArray(info.position, true);
     }
 
     private void setVisibilityForAllCheckBox(int visibility) {
@@ -297,7 +342,7 @@ public class MainActivity extends AppCompatActivity
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        adapterForListView.removeSelected();
+                        adapter.removeSelected();
                         closeDeletingProcess();
                     }
                 });
@@ -318,20 +363,20 @@ public class MainActivity extends AppCompatActivity
         cbNote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                adapterForListView.putIntoSparseArray(Integer.parseInt(buttonView.getText().toString()), isChecked);
-                isSelectAll = adapterForListView.isSelectAll();
+                adapter.putIntoSparseArray(Integer.parseInt(buttonView.getText().toString()), isChecked);
+                isSelectAll = adapter.isSelectAll();
 
-                toolbar.setTitle(adapterForListView.getSbArraySize() + "");
-                optionsMenu.findItem(R.id.edit_note).setVisible(adapterForListView.isOnly());
+                toolbar.setTitle(adapter.getSbArraySize() + "");
+                optionsMenu.findItem(R.id.edit_note).setVisible(adapter.isOnly());
 
-                adapterForListView.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
             }
         });
     }
 
     private void showOrHidePlaceholder() {
-        //Log.d("appLog", "Placeholder: count of items = " + adapterForListView.getCount());
-        if (adapterForListView.getCount() != 0) {
+        //Log.d("appLog", "Placeholder: count of items = " + adapter.getCount());
+        if (cursorAdapter.getCount() != 0) {
             tvPlaceholder.setVisibility(View.GONE);
         } else {
             tvPlaceholder.setVisibility(View.VISIBLE);
