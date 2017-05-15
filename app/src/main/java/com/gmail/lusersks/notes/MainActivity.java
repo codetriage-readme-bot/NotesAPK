@@ -1,9 +1,11 @@
 package com.gmail.lusersks.notes;
 
 import android.app.AlertDialog;
+import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -36,6 +38,7 @@ import com.gmail.lusersks.notes.views.PreferencesActivity;
 import static com.gmail.lusersks.notes.provider.Constants.COL_ID;
 import static com.gmail.lusersks.notes.provider.Constants.COL_TITLE;
 import static com.gmail.lusersks.notes.provider.Constants.NOTES_CONTENT_URI;
+import static com.gmail.lusersks.notes.provider.NotesProvider.TAG_LOG;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -185,7 +188,12 @@ public class MainActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             case R.id.menu_main_clear: {
-                adapter.clearAll();
+                //adapter.clearAll();
+                //for (int i = 0; i < adapter.getCount(); i++) {
+                    //Uri uri = ContentUris.withAppendedId(NOTES_CONTENT_URI, i);
+                    int cnt = getContentResolver().delete(NOTES_CONTENT_URI, null, null);
+                    Log.d(TAG_LOG, "delete, count = " + cnt);
+                //}
                 showOrHidePlaceholder();
                 break;
             }

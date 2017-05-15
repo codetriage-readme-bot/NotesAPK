@@ -1,6 +1,7 @@
 package com.gmail.lusersks.notes.provider;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -16,6 +17,9 @@ import static com.gmail.lusersks.notes.provider.Constants.COL_BODY;
 import static com.gmail.lusersks.notes.provider.Constants.COL_ID;
 import static com.gmail.lusersks.notes.provider.Constants.COL_TITLE;
 import static com.gmail.lusersks.notes.provider.Constants.COL_TYPE;
+import static com.gmail.lusersks.notes.provider.Constants.NOTES_CONTENT_ITEM_TYPE;
+import static com.gmail.lusersks.notes.provider.Constants.NOTES_CONTENT_TYPE;
+import static com.gmail.lusersks.notes.provider.Constants.NOTES_CONTENT_URI;
 import static com.gmail.lusersks.notes.provider.Constants.NOTES_DB;
 import static com.gmail.lusersks.notes.provider.Constants.NOTES_TABLE;
 import static com.gmail.lusersks.notes.provider.Constants.URI_NOTES;
@@ -68,6 +72,8 @@ public class NotesProvider extends ContentProvider {
 
         db = dbHelper.getWritableDatabase();
         Cursor cursor = db.query(NOTES_TABLE, projection, selection, selectionArgs, null, null, sortOrder);
+        // ContentResolver will notify the cursor about changing data in NOTES_CONTENT_URI
+        cursor.setNotificationUri(getContext().getContentResolver(), NOTES_CONTENT_URI);
         return cursor;
     }
 
@@ -75,6 +81,12 @@ public class NotesProvider extends ContentProvider {
     @Override
     public String getType(@NonNull Uri uri) {
         Log.d(TAG_LOG, "NotesProvider.getType");
+        switch (uriMatcher.match(uri)) {
+            case URI_NOTES:
+                return NOTES_CONTENT_TYPE;
+            case URI_NOTES_ID:
+                return NOTES_CONTENT_ITEM_TYPE;
+        }
         return null;
     }
 
@@ -82,12 +94,23 @@ public class NotesProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
         Log.d(TAG_LOG, "NotesProvider.insert");
+
+        db = dbHelper.getWritableDatabase();
+        long rowID = db.insert(NOTES_TABLE, null, values);
+        Uri resultUri = ContentUris.withAppendedId(NOTES_CONTENT_URI, rowID);
+        Log.d(TAG_LOG, "NotesProvider.insert -- resultUri: " + resultUri);
+        // notify ContentResolver about changing data in resultUri
+        getContext().getContentResolver().notifyChange(resultUri, null);
+
         return null;
     }
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         Log.d(TAG_LOG, "NotesProvider.delete");
+        db = dbHelper.getWritableDatabase();
+        db.delete(NOTES_TABLE, selection, selectionArgs);
+        getContext().getContentResolver().notifyChange(uri, null);
         return 0;
     }
 

@@ -1,6 +1,8 @@
 package com.gmail.lusersks.notes.views;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +20,11 @@ import static com.gmail.lusersks.notes.MainActivity.EXTRA_CONTENT;
 import static com.gmail.lusersks.notes.MainActivity.EXTRA_FORM_TITLE;
 import static com.gmail.lusersks.notes.MainActivity.EXTRA_NOTE;
 import static com.gmail.lusersks.notes.presenters.NotesActions.EXTRA_TYPE;
+import static com.gmail.lusersks.notes.provider.Constants.COL_BODY;
+import static com.gmail.lusersks.notes.provider.Constants.COL_TITLE;
+import static com.gmail.lusersks.notes.provider.Constants.COL_TYPE;
+import static com.gmail.lusersks.notes.provider.Constants.NOTES_CONTENT_URI;
+import static com.gmail.lusersks.notes.provider.NotesProvider.TAG_LOG;
 
 public class FormActivity extends AppCompatActivity {
     private EditText etNoteTitle, etNoteContent;
@@ -66,19 +73,26 @@ public class FormActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.menu_form_save) {
-//            Log.d("appLog", "R.id.menu_form_save");
-//            Log.d("appLog", "getTitle() = " + getTitle());
+            //Log.d("appLog", "R.id.menu_form_save");
+            //Log.d("appLog", "getTitle() = " + getTitle());
 
             String title = etNoteTitle.getText().toString();
             String content = etNoteContent.getText().toString();
 
             if (getTitle().equals("New Note")) {
-//                Log.d("appLog", "NotesData.addItem");
-                NotesData.addItem(title, content, itemType);
+                Log.d(TAG_LOG, "NotesData.addItem");
+                //NotesData.addItem(title, content, itemType);
+
+                ContentValues cv = new ContentValues();
+                cv.put(COL_TITLE, title);
+                cv.put(COL_BODY, content);
+                cv.put(COL_TYPE, itemType);
+                Uri newUri = getApplicationContext().getContentResolver().insert(NOTES_CONTENT_URI, cv);
+                Log.d(TAG_LOG, "insert, result Uri : " + newUri);
             }
             if (getTitle().equals("Edit Note")) {
-//                Log.d("appLog", "NotesData.editItem");
-                NotesData.editItem(oldTitle, title, content, itemType);
+                Log.d("appLog", "NotesData.editItem");
+                //NotesData.editItem(oldTitle, title, content, itemType);
                 intent.putExtra(EXTRA_NOTE, title);
                 intent.putExtra(EXTRA_CONTENT, content);
             }
