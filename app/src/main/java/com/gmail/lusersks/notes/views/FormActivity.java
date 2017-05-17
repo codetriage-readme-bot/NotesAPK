@@ -1,5 +1,7 @@
 package com.gmail.lusersks.notes.views;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,6 +21,7 @@ import com.gmail.lusersks.notes.R;
 import static com.gmail.lusersks.notes.MainActivity.EXTRA_CONTENT;
 import static com.gmail.lusersks.notes.MainActivity.EXTRA_FORM_TITLE;
 import static com.gmail.lusersks.notes.MainActivity.EXTRA_NOTE;
+import static com.gmail.lusersks.notes.presenters.NotesActions.EXTRA_ID;
 import static com.gmail.lusersks.notes.presenters.NotesActions.EXTRA_TYPE;
 import static com.gmail.lusersks.notes.provider.Constants.COL_BODY;
 import static com.gmail.lusersks.notes.provider.Constants.COL_TITLE;
@@ -80,19 +83,10 @@ public class FormActivity extends AppCompatActivity {
             String content = etNoteContent.getText().toString();
 
             if (getTitle().equals("New Note")) {
-                Log.d(TAG_LOG, "NotesData.addItem");
-                //NotesData.addItem(title, content, itemType);
-
-                ContentValues cv = new ContentValues();
-                cv.put(COL_TITLE, title);
-                cv.put(COL_BODY, content);
-                cv.put(COL_TYPE, itemType);
-                Uri newUri = getApplicationContext().getContentResolver().insert(NOTES_CONTENT_URI, cv);
-                Log.d(TAG_LOG, "insert, result Uri : " + newUri);
+                NotesData.addItem(title, content, itemType);
             }
             if (getTitle().equals("Edit Note")) {
-                Log.d("appLog", "NotesData.editItem");
-                //NotesData.editItem(oldTitle, title, content, itemType);
+                NotesData.editItem(oldTitle, title, content, itemType);
                 intent.putExtra(EXTRA_NOTE, title);
                 intent.putExtra(EXTRA_CONTENT, content);
             }

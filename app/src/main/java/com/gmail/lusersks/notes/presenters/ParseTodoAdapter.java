@@ -1,6 +1,7 @@
 package com.gmail.lusersks.notes.presenters;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
@@ -118,6 +119,7 @@ public class ParseTodoAdapter extends ArrayAdapter<String> {
 
         Log.d("appLog", String.valueOf(sbContent));
 
+        ContentResolver cr = context.getApplicationContext().getContentResolver();
         NotesData.editItem(title, title, String.valueOf(sbContent), FLAG_TODO);
     }
 

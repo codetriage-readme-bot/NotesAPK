@@ -102,23 +102,30 @@ public class NotesProvider extends ContentProvider {
         // notify ContentResolver about changing data in resultUri
         getContext().getContentResolver().notifyChange(resultUri, null);
 
-        return null;
+        return resultUri;
     }
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         Log.d(TAG_LOG, "NotesProvider.delete");
+
         db = dbHelper.getWritableDatabase();
-        db.delete(NOTES_TABLE, selection, selectionArgs);
+        int cnt = db.delete(NOTES_TABLE, selection, selectionArgs);
         getContext().getContentResolver().notifyChange(uri, null);
-        return 0;
+
+        return cnt;
     }
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values,
                       @Nullable String selection, @Nullable String[] selectionArgs) {
         Log.d(TAG_LOG, "NotesProvider.update");
-        return 0;
+
+        db = dbHelper.getWritableDatabase();
+        int cnt = db.update(NOTES_TABLE, values, selection, selectionArgs);
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return cnt;
     }
 
     private class DBHelper extends SQLiteOpenHelper {

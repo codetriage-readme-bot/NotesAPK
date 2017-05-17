@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initDBHelper() {
-        NotesData.initDBHelper(this);
+        NotesData.initDBHelper(getContentResolver());
     }
 
     private void setButtonsBehavior() {
@@ -188,13 +188,8 @@ public class MainActivity extends AppCompatActivity
 
         switch (item.getItemId()) {
             case R.id.menu_main_clear: {
-                //adapter.clearAll();
-                //for (int i = 0; i < adapter.getCount(); i++) {
-                    //Uri uri = ContentUris.withAppendedId(NOTES_CONTENT_URI, i);
-                    int cnt = getContentResolver().delete(NOTES_CONTENT_URI, null, null);
-                    Log.d(TAG_LOG, "delete, count = " + cnt);
-                //}
-                showOrHidePlaceholder();
+                NotesData.clearItems();
+                tvPlaceholder.setVisibility(View.VISIBLE);
                 break;
             }
             case R.id.edit_note: {
@@ -317,13 +312,14 @@ public class MainActivity extends AppCompatActivity
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab: {
-                if (rbFabNote.isChecked()) {
+                NotesActions.addNewNote(MainActivity.this);
+                /*if (rbFabNote.isChecked()) {
                     Log.d("appLog", "addNewNote");
                     NotesActions.addNewNote(MainActivity.this);
                 } else {
                     Log.d("appLog", "addNewTodo");
                     NotesActions.addNewTodo(MainActivity.this);
-                }
+                }*/
                 break;
             }
         }

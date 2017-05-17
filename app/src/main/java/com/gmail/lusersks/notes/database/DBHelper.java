@@ -20,7 +20,7 @@ import static com.gmail.lusersks.notes.provider.Constants.NOTES_TABLE;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_QUERY =
-            "create table if not exist " + NOTES_TABLE + " ("
+            "create table " + NOTES_TABLE + " ("
             + COL_ID + " integer primary key autoincrement, "
             + COL_TITLE + " text, "
             + COL_BODY + " text, "
@@ -74,31 +74,29 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_QUERY);
     }
 
-    public List<List<String>> getRecords() {
-        List<String> listOfNotes = new ArrayList<>();
-        List<String> listOfContents = new ArrayList<>();
-        List<String> listOfTypes = new ArrayList<>();
+    public List<NotesItem> getRecords() {
+        List<NotesItem> listNotesItems = new ArrayList<>();
 
         Cursor cursor = getReadableDatabase().query(NOTES_TABLE, null, null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
+            int idColumnIndex = cursor.getColumnIndex(COL_ID);
             int titleColumnIndex = cursor.getColumnIndex(COL_TITLE);
-            int bodyColumnIndex = cursor.getColumnIndex(COL_BODY);
+            int contentColumnIndex = cursor.getColumnIndex(COL_BODY);
             int typeColumnIndex = cursor.getColumnIndex(COL_TYPE);
 
             do {
+                int noteId = cursor.getInt(idColumnIndex);
                 String noteTitle = cursor.getString(titleColumnIndex);
-                String noteBody = cursor.getString(bodyColumnIndex);
+                String noteContent = cursor.getString(contentColumnIndex);
                 String noteType = cursor.getString(typeColumnIndex);
 
-                listOfNotes.add(noteTitle);
-                listOfContents.add(noteBody);
-                listOfTypes.add(noteType);
+                listNotesItems.add(new NotesItem(noteId, noteTitle, noteContent, noteType));
             } while (cursor.moveToNext());
         }
 
         cursor.close();
 
-        return new ArrayList<>(Arrays.asList(listOfNotes, listOfContents, listOfTypes));
+        return listNotesItems;
     }
 }

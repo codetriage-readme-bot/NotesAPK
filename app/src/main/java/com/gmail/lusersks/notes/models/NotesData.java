@@ -1,84 +1,125 @@
 package com.gmail.lusersks.notes.models;
 
-import com.gmail.lusersks.notes.MainActivity;
-import com.gmail.lusersks.notes.database.DBHelper;
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
+import android.util.Log;
+
+import com.gmail.lusersks.notes.database.NotesItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.gmail.lusersks.notes.presenters.NotesActions.FLAG_TODO;
+import static com.gmail.lusersks.notes.provider.Constants.COL_BODY;
+import static com.gmail.lusersks.notes.provider.Constants.COL_ID;
+import static com.gmail.lusersks.notes.provider.Constants.COL_TITLE;
+import static com.gmail.lusersks.notes.provider.Constants.COL_TYPE;
+import static com.gmail.lusersks.notes.provider.Constants.NOTES_CONTENT_URI;
+import static com.gmail.lusersks.notes.provider.NotesProvider.TAG_LOG;
 
 public class NotesData {
-    private static List<String> listItems = new ArrayList<>();
-    private static List<String> listItemsContents = new ArrayList<>();
-    private static List<String> listItemsTypes = new ArrayList<>();
+    private static List<NotesItem> listNotesItems = new ArrayList<>();
 
-    private static DBHelper dbHelper;
+    private static ContentResolver cr;
 
-    public static void initDBHelper(MainActivity activity) {
-        dbHelper = new DBHelper(activity);
+    public static void initDBHelper(ContentResolver contentResolver) {
+        cr = contentResolver;
 
-        listItems.clear();
-        listItemsContents.clear();
-        listItemsTypes.clear();
+        listNotesItems.clear();
 
-        List<List<String>> list = dbHelper.getRecords();
-        listItems.addAll(list.get(0));
-        listItemsContents.addAll(list.get(1));
-        listItemsTypes.addAll(list.get(2));
+        Cursor cursor = cr.query(NOTES_CONTENT_URI, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            int idColumnIndex = cursor.getColumnIndex(COL_ID);
+            int titleColumnIndex = cursor.getColumnIndex(COL_TITLE);
+            int contentColumnIndex = cursor.getColumnIndex(COL_BODY);
+            int typeColumnIndex = cursor.getColumnIndex(COL_TYPE);
+
+            do {
+                int noteId = cursor.getInt(idColumnIndex);
+                String noteTitle = cursor.getString(titleColumnIndex);
+                String noteContent = cursor.getString(contentColumnIndex);
+                String noteType = cursor.getString(typeColumnIndex);
+
+                listNotesItems.add(new NotesItem(noteId, noteTitle, noteContent, noteType));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
     }
 
     public static void addItem(String title, String content, String itemType) {
-        listItems.add(title);
-        listItemsContents.add(content);
-        listItemsTypes.add(itemType);
+        int id = listNotesItems.isEmpty() ? 0 : listNotesItems.get(listNotesItems.size() - 1).getId();
+        listNotesItems.add(new NotesItem(id, title, content, itemType));
 
-        dbHelper.insertRecord(title, content, itemType);
+        ContentValues cv = new ContentValues();
+        cv.put(COL_TITLE, title);
+        cv.put(COL_BODY, content);
+        cv.put(COL_TYPE, itemType);
+        Uri newUri = cr.insert(NOTES_CONTENT_URI, cv);
+        Log.d(TAG_LOG, "insert, result Uri : " + newUri);
+
+        //dbHelper.insertRecord(title, content, itemType);
     }
 
     public static void editItem(String oldTitle, String title, String content, String itemType) {
         int index = findIndexByTitle(oldTitle);
-        listItems.set(index, title);
-        listItemsContents.set(index, content);
-        listItemsTypes.set(index, itemType);
+        int id = listNotesItems.get(index).getId();
+        listNotesItems.get(index).setTitle(title);
+        listNotesItems.get(index).setContent(content);
 
-        dbHelper.updateRecord(index + 1, title, content, itemType);
+        ContentValues cv = new ContentValues();
+        cv.put(COL_TITLE, title);
+        cv.put(COL_BODY, content);
+        cv.put(COL_TYPE, itemType);
+        Uri uri = ContentUris.withAppendedId(NOTES_CONTENT_URI, id);
+        int cnt = cr.update(uri, cv, null, null);
+        Log.d(TAG_LOG, "update, result Uri : " + cnt);
+
+        //dbHelper.updateRecord(index + 1, title, content, itemType);
     }
 
     public static void deleteItem(String noteTitle) {
         int index = findIndexByTitle(noteTitle);
-        listItems.remove(index);
-        listItemsContents.remove(index);
-        listItemsTypes.remove(index);
+        int id = listNotesItems.get(index).getId();
+        listNotesItems.remove(index);
 
-        dbHelper.deleteRecord(index);
+        Uri uri = ContentUris.withAppendedId(NOTES_CONTENT_URI, id);
+        int cnt = cr.delete(uri, null, null);
+        Log.d(TAG_LOG, "delete, count = " + cnt);
+
+        //dbHelper.deleteRecord(index);
     }
 
     public static void deleteItem(int index) {
-        listItems.remove(index);
-        listItemsContents.remove(index);
-        listItemsTypes.remove(index);
+        int id = listNotesItems.get(index).getId();
+        listNotesItems.remove(index);
 
-        dbHelper.deleteRecord(index);
+        Uri uri = ContentUris.withAppendedId(NOTES_CONTENT_URI, id);
+        int cnt = cr.delete(uri, null, null);
+        Log.d(TAG_LOG, "delete, count = " + cnt);
+
+        //dbHelper.deleteRecord(index);
     }
 
     public static void clearItems() {
-        listItems.clear();
-        listItemsContents.clear();
-        listItemsTypes.clear();
+        listNotesItems.clear();
 
-        dbHelper.clearDB();
+        int cnt = cr.delete(NOTES_CONTENT_URI, null, null);
+        Log.d(TAG_LOG, "delete, count = " + cnt);
+
+        //dbHelper.clearDB();
     }
 
     public static String getNote(int index) {
-        return listItems.get(index);
+        return listNotesItems.get(index).getTitle();
     }
 
-    public static ArrayList<String> getNotes() {
-        return (ArrayList<String>) listItems;
+    public static int getCount() {
+        return listNotesItems.size();
     }
 
-    public static ArrayList<String> getTodos() {
+    /*public static ArrayList<String> getTodos() {
         ArrayList<String> listTodos = new ArrayList<>();
         for (int i = 0; i < listItems.size(); i++) {
             if (listItemsTypes.get(i).equals(FLAG_TODO)) {
@@ -86,20 +127,24 @@ public class NotesData {
             }
         }
         return listTodos;
-    }
+    }*/
 
-    public static String getContext(String title) {
-        int index = findIndexByTitle(title);
-        return listItemsContents.get(index);
+    public static String getContext(int index) {
+        return listNotesItems.get(index).getContent();
     }
 
     private static int findIndexByTitle(String title) {
         int index = -1;
-        for (int i = 0; i < listItems.size(); i++) {
-            if (listItems.get(i).equals(title)) {
+        for (int i = 0; i < listNotesItems.size(); i++) {
+            if (listNotesItems.get(i).getTitle().equals(title)) {
                 index = i;
             }
         }
         return index;
+    }
+
+    public static String getContext(String title) {
+        int index = findIndexByTitle(title);
+        return getContext(index);
     }
 }

@@ -1,6 +1,7 @@
 package com.gmail.lusersks.notes.presenters;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -26,6 +27,7 @@ public class NotesActions {
     public static final String EXTRA_TYPE = "type";
     public static final String FLAG_NOTE = "note";
     public static final String FLAG_TODO = "todo";
+    public static final String EXTRA_ID = "id";
 
     private static void addNew(Activity activity, String type) {
         Intent intent = new Intent();
@@ -47,11 +49,11 @@ public class NotesActions {
     }
 
     public static void editSelected(Activity activity, int position, String type) {
-        String note = NotesData.getNote(position);
         Intent intent = new Intent(activity, FormActivity.class);
         intent.putExtra(EXTRA_FORM_TITLE, "Edit Note");
-        intent.putExtra(EXTRA_NOTE, note);
-        intent.putExtra(EXTRA_CONTENT, NotesData.getContext(note));
+        intent.putExtra(EXTRA_ID, position);
+        intent.putExtra(EXTRA_NOTE, NotesData.getNote(position));
+        intent.putExtra(EXTRA_CONTENT, NotesData.getContext(position));
         intent.putExtra(EXTRA_TYPE, type);
         activity.startActivityForResult(intent, 3);
     }
@@ -82,7 +84,9 @@ public class NotesActions {
         cursor.close();*/
 
         Uri uri = Uri.parse(NOTES_CONTENT_URI + "/" + (position + 1));
-        Cursor cursor = activity.getApplicationContext().getContentResolver().query(uri, null, null, null, null);
+        ContentResolver cr = activity.getApplicationContext().getContentResolver();
+
+        Cursor cursor = cr.query(uri, null, null, null, null);
         if (cursor.moveToFirst()) {
             note = cursor.getString(cursor.getColumnIndex(COL_TITLE));
             Log.d("appLog", "note = " + note);

@@ -20,12 +20,16 @@ public class SimpleNotesAdapter extends ArrayAdapter<String> {
     public SimpleNotesAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId) {
         super(context, resource, textViewResourceId);
         this.context = context;
-        addAll(NotesData.getNotes());
+
+        for (int i = 0; i < NotesData.getCount(); i++) {
+            add(NotesData.getNote(i));
+        }
+
         sbArray = new SparseBooleanArray();
     }
 
     public int getCount() {
-        return NotesData.getNotes().size();
+        return NotesData.getCount();
     }
 
     public void clearAll() {
@@ -62,7 +66,7 @@ public class SimpleNotesAdapter extends ArrayAdapter<String> {
     }
 
     public boolean isSelectAll() {
-        return sbArray.size() == NotesData.getNotes().size();
+        return sbArray.size() == NotesData.getCount();
     }
 
     public int getSbArraySize() {
