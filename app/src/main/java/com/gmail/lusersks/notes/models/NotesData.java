@@ -50,7 +50,7 @@ public class NotesData {
 
     public static void addItem(String title, String content, String itemType) {
         int id = listNotesItems.isEmpty() ? 0 : listNotesItems.get(listNotesItems.size() - 1).getId();
-        listNotesItems.add(new NotesItem(id, title, content, itemType));
+        listNotesItems.add(new NotesItem(id + 1, title, content, itemType));
 
         ContentValues cv = new ContentValues();
         cv.put(COL_TITLE, title);
@@ -81,18 +81,13 @@ public class NotesData {
 
     public static void deleteItem(String noteTitle) {
         int index = findIndexByTitle(noteTitle);
-        int id = listNotesItems.get(index).getId();
-        listNotesItems.remove(index);
-
-        Uri uri = ContentUris.withAppendedId(NOTES_CONTENT_URI, id);
-        int cnt = cr.delete(uri, null, null);
-        Log.d(TAG_LOG, "delete, count = " + cnt);
-
-        //dbHelper.deleteRecord(index);
+        deleteItem(index);
     }
 
     public static void deleteItem(int index) {
+        Log.d(TAG_LOG, "delete, index = " + index);
         int id = listNotesItems.get(index).getId();
+        Log.d(TAG_LOG, "delete, id = " + id);
         listNotesItems.remove(index);
 
         Uri uri = ContentUris.withAppendedId(NOTES_CONTENT_URI, id);
@@ -146,5 +141,9 @@ public class NotesData {
     public static String getContext(String title) {
         int index = findIndexByTitle(title);
         return getContext(index);
+    }
+
+    public static int getIdAtPosition(int index) {
+        return listNotesItems.get(index).getId();
     }
 }

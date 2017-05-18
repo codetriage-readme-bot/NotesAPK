@@ -83,7 +83,7 @@ public class NotesActions {
         }
         cursor.close();*/
 
-        Uri uri = Uri.parse(NOTES_CONTENT_URI + "/" + (position + 1));
+        Uri uri = Uri.parse(NOTES_CONTENT_URI + "/" + (NotesData.getIdAtPosition(position)));
         ContentResolver cr = activity.getApplicationContext().getContentResolver();
 
         Cursor cursor = cr.query(uri, null, null, null, null);

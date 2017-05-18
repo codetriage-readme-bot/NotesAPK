@@ -95,6 +95,9 @@ public class NotesProvider extends ContentProvider {
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
         Log.d(TAG_LOG, "NotesProvider.insert");
 
+        if (uriMatcher.match(uri) != URI_NOTES)
+            throw new IllegalArgumentException("Wrong URI: " + uri);
+
         db = dbHelper.getWritableDatabase();
         long rowID = db.insert(NOTES_TABLE, null, values);
         Uri resultUri = ContentUris.withAppendedId(NOTES_CONTENT_URI, rowID);
@@ -109,6 +112,23 @@ public class NotesProvider extends ContentProvider {
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         Log.d(TAG_LOG, "NotesProvider.delete");
 
+        switch (uriMatcher.match(uri)) {
+            case URI_NOTES:
+                Log.d("appLog", "URI_NOTES");
+                break;
+            case URI_NOTES_ID:
+                String id = uri.getLastPathSegment();
+                Log.d("appLog", "URI_NOTES_ID, " + id);
+                if (TextUtils.isEmpty(selection)) {
+                    selection = COL_ID + " = " + id;
+                } else {
+                    selection = selection + " AND " + COL_ID + " = " + id;
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Wrong URI: " + uri);
+        }
+
         db = dbHelper.getWritableDatabase();
         int cnt = db.delete(NOTES_TABLE, selection, selectionArgs);
         getContext().getContentResolver().notifyChange(uri, null);
@@ -120,6 +140,23 @@ public class NotesProvider extends ContentProvider {
     public int update(@NonNull Uri uri, @Nullable ContentValues values,
                       @Nullable String selection, @Nullable String[] selectionArgs) {
         Log.d(TAG_LOG, "NotesProvider.update");
+
+        switch (uriMatcher.match(uri)) {
+            case URI_NOTES:
+                Log.d("appLog", "URI_NOTES");
+                break;
+            case URI_NOTES_ID:
+                String id = uri.getLastPathSegment();
+                Log.d("appLog", "URI_NOTES_ID, " + id);
+                if (TextUtils.isEmpty(selection)) {
+                    selection = COL_ID + " = " + id;
+                } else {
+                    selection = selection + " AND " + COL_ID + " = " + id;
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Wrong URI: " + uri);
+        }
 
         db = dbHelper.getWritableDatabase();
         int cnt = db.update(NOTES_TABLE, values, selection, selectionArgs);

@@ -17,6 +17,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.ContextMenu;
 import android.view.View;
 import android.view.Menu;
@@ -54,12 +55,12 @@ public class MainActivity extends AppCompatActivity
     private TextView tvPlaceholder;
 
     private RadioButton rbFabNote;
-    public SimpleNotesAdapter adapter;
     public AppBarLayout appBarLayout;
     public ListView listView;
     public Toolbar toolbar;
     public Menu optionsMenu;
 
+    private SparseBooleanArray sbArray;
     private SimpleCursorAdapter cursorAdapter;
 
     @Override
@@ -153,7 +154,7 @@ public class MainActivity extends AppCompatActivity
         //listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
         setListViewBehavior();
-        //registerForContextMenu(listView);
+        registerForContextMenu(listView);
 
         //listView.setVisibility(View.VISIBLE);
         if (cursorAdapter.getCount() != 0) tvPlaceholder.setVisibility(View.GONE);
@@ -194,17 +195,17 @@ public class MainActivity extends AppCompatActivity
             }
             case R.id.edit_note: {
                 String type = rbFabNote.isChecked() ? "note" : "todo";
-                NotesActions.editSelected(this, adapter.getSparseArray().keyAt(0), type);
+                NotesActions.editSelected(this, sbArray.keyAt(0), type);
                 break;
             }
             case R.id.select_all: {
                 CheckBox cbNote;
                 // If SelectAll was clicked -> inverse state of the CheckBox'es
                 boolean isChecked = !isSelectAll;
-                for (int i = 0; i < adapter.getCount(); i++) {
+                for (int i = 0; i < cursorAdapter.getCount(); i++) {
                     cbNote = (CheckBox) listView.getChildAt(i).findViewById(R.id.lv_check_box);
                     cbNote.setChecked(isChecked);
-                    adapter.putIntoSparseArray(i, isChecked);
+                    sbArray.put(i, isChecked);
                 }
                 break;
             }
@@ -226,7 +227,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        adapter.renewSparseArray();
+        sbArray = new SparseBooleanArray();
 
         setVisibilityForAllCheckBox(View.VISIBLE);
         optionsMenu.findItem(R.id.menu_main_clear).setVisible(false);
@@ -236,7 +237,7 @@ public class MainActivity extends AppCompatActivity
         CheckBox checkBox = (CheckBox) info.targetView.findViewById(R.id.lv_check_box);
         checkBox.setChecked(true);
 
-        adapter.putIntoSparseArray(info.position, true);
+        sbArray.put(info.position, true);
     }
 
     private void setVisibilityForAllCheckBox(int visibility) {
@@ -346,7 +347,13 @@ public class MainActivity extends AppCompatActivity
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        adapter.removeSelected();
+                        int i = sbArray.size();
+                        int index;
+                        do {
+                            index = sbArray.keyAt(--i);
+                            NotesData.deleteItem(index);
+                        } while (i > 0);
+                        sbArray.clear();
                         closeDeletingProcess();
                     }
                 });
@@ -367,13 +374,13 @@ public class MainActivity extends AppCompatActivity
         cbNote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                adapter.putIntoSparseArray(Integer.parseInt(buttonView.getText().toString()), isChecked);
-                isSelectAll = adapter.isSelectAll();
+                sbArray.put(Integer.parseInt(buttonView.getText().toString()), isChecked);
+                isSelectAll = (sbArray.size() == cursorAdapter.getCount());
 
-                toolbar.setTitle(adapter.getSbArraySize() + "");
-                optionsMenu.findItem(R.id.edit_note).setVisible(adapter.isOnly());
+                toolbar.setTitle(sbArray.size() + "");
+                optionsMenu.findItem(R.id.edit_note).setVisible(sbArray.size() == 1);
 
-                adapter.notifyDataSetChanged();
+                cursorAdapter.notifyDataSetChanged();
             }
         });
     }
