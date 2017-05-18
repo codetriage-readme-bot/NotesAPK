@@ -1,11 +1,9 @@
 package com.gmail.lusersks.notes;
 
 import android.app.AlertDialog;
-import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -16,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ContextMenu;
 import android.view.View;
@@ -33,13 +30,11 @@ import android.widget.Toast;
 
 import com.gmail.lusersks.notes.presenters.NotesActions;
 import com.gmail.lusersks.notes.models.NotesData;
-import com.gmail.lusersks.notes.presenters.SimpleNotesAdapter;
 import com.gmail.lusersks.notes.views.PreferencesActivity;
 
 import static com.gmail.lusersks.notes.provider.Constants.COL_ID;
 import static com.gmail.lusersks.notes.provider.Constants.COL_TITLE;
 import static com.gmail.lusersks.notes.provider.Constants.NOTES_CONTENT_URI;
-import static com.gmail.lusersks.notes.provider.NotesProvider.TAG_LOG;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
