@@ -49,15 +49,17 @@ public class NotesData {
     }
 
     public static void addItem(String title, String content, String itemType) {
-        int id = listNotesItems.isEmpty() ? 0 : listNotesItems.get(listNotesItems.size() - 1).getId();
-        listNotesItems.add(new NotesItem(id + 1, title, content, itemType));
-
         ContentValues cv = new ContentValues();
         cv.put(COL_TITLE, title);
         cv.put(COL_BODY, content);
         cv.put(COL_TYPE, itemType);
         Uri newUri = cr.insert(NOTES_CONTENT_URI, cv);
         Log.d(TAG_LOG, "insert, result Uri : " + newUri);
+
+        if (newUri != null) {
+            int id = Integer.parseInt(newUri.getLastPathSegment());
+            listNotesItems.add(new NotesItem(id, title, content, itemType));
+        }
 
         //dbHelper.insertRecord(title, content, itemType);
     }

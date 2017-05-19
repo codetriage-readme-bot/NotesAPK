@@ -1,29 +1,23 @@
 package com.gmail.lusersks.notes.views;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gmail.lusersks.notes.MainActivity;
-import com.gmail.lusersks.notes.presenters.NotesActions;
 import com.gmail.lusersks.notes.R;
 import com.gmail.lusersks.notes.presenters.ParseTodoAdapter;
 
 public class ShowActivity extends AppCompatActivity {
-    public TextView tvItemTitle, tvNoteContent;
+    public TextView tvItemTitle;
+    public TextView tvNoteContent;
     private ListView lvTodoList;
     private ParseTodoAdapter adapter;
     private boolean isTodo;
@@ -34,9 +28,7 @@ public class ShowActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show);
 
         initViews();
-        Intent intent = getIntent();
-        readExtraFields(intent);
-        setTypeToTitle();
+        readExtraFields();
     }
 
     @Override
@@ -47,22 +39,22 @@ public class ShowActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        tvItemTitle = (TextView) findViewById(R.id.tv_show_title);
+        //tvItemTitle = (TextView) findViewById(R.id.tv_show_title);
+        tvItemTitle = null;
         tvNoteContent = (TextView) findViewById(R.id.tv_note_content);
         lvTodoList = (ListView) findViewById(R.id.lv_todo_list);
     }
 
-    private void readExtraFields(Intent intent) {
-        tvItemTitle.setText(intent.getStringExtra(MainActivity.EXTRA_NOTE));
-        tvNoteContent.setText(intent.getStringExtra(MainActivity.EXTRA_CONTENT));
-        String str = tvNoteContent.getText().toString();
-        Log.d("appLog", str);
-        isTodo = str.charAt(0) == '*' || str.charAt(0) == '-';
-    }
+    private void readExtraFields() {
+        Intent intent = getIntent();
 
-    private void setTypeToTitle() {
-        String type = isTodo ? "Todo" : "Note";
-        setTitle(type);
+        setTitle(intent.getStringExtra(MainActivity.EXTRA_NOTE));
+
+        String noteContent = intent.getStringExtra(MainActivity.EXTRA_CONTENT);
+        tvNoteContent.setText(noteContent);
+
+        //Log.d("appLog", noteContent);
+        isTodo = noteContent.charAt(0) == '*' || noteContent.charAt(0) == '-';
     }
 
     private void initListView() {
@@ -91,62 +83,9 @@ public class ShowActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_show, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_show_item_edit: {
-                String type = isTodo ? "todo" : "note";
-                NotesActions.editSelected(ShowActivity.this, type);
-                return true;
-            }
-            case R.id.menu_show_item_delete: {
-                showDeleteDialog();
-                return true;
-            }
-            default: {
-                return false;
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (resultCode == RESULT_OK) {
-            readExtraFields(intent);
-            Toast.makeText(this, "The note is edited", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("noteTitle", tvItemTitle.getText().toString());
-    }
-
-    private void showDeleteDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(ShowActivity.this);
-        builder.setMessage("Do you  want to delete selected record(s)?")
-                .setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // TODO  Auto-generated method stub
-                    }
-                })
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        NotesActions.deleteSelected(tvItemTitle.getText().toString());
-                        finish();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.setTitle("Confirmation");
-        alert.show();
+        //outState.putString("noteTitle", tvItemTitle.getText().toString());
     }
 
     @Override

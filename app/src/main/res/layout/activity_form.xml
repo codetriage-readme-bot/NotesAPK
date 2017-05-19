@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.gmail.lusersks.notes.views.FormActivity">
+    tools:context=".MainActivity">
 
-    <include layout="@layout/note_form" />
+    <EditText
+        android:id="@+id/et_note_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/note_hint_title"
+        android:padding="16dp" />
 
-</android.support.design.widget.CoordinatorLayout>
+    <EditText
+        android:id="@+id/et_note_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_note_title"
+        android:hint="@string/note_hint_content"
+        android:padding="16dp" />
+
+    <Button
+        android:id="@+id/btn_save_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_note_content"
+        android:text="@string/btn_save_note"/>
+
+    <Button
+        android:id="@+id/btn_cancel_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_note_content"
+        android:layout_toRightOf="@id/btn_save_note"
+        android:text="@string/btn_cancel_save"/>
+
+</RelativeLayout>

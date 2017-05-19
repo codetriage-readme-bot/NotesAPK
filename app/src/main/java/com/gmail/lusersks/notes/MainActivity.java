@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ContextMenu;
 import android.view.View;
@@ -32,12 +33,14 @@ import com.gmail.lusersks.notes.presenters.NotesActions;
 import com.gmail.lusersks.notes.models.NotesData;
 import com.gmail.lusersks.notes.views.PreferencesActivity;
 
+import static com.gmail.lusersks.notes.presenters.NotesActions.REQUEST_CODE_EDIT;
+import static com.gmail.lusersks.notes.presenters.NotesActions.REQUEST_CODE_NEW;
 import static com.gmail.lusersks.notes.provider.Constants.COL_ID;
 import static com.gmail.lusersks.notes.provider.Constants.COL_TITLE;
 import static com.gmail.lusersks.notes.provider.Constants.NOTES_CONTENT_URI;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String EXTRA_NOTE = "extra_note";
     public static final String EXTRA_CONTENT = "extra_content";
@@ -46,7 +49,6 @@ public class MainActivity extends AppCompatActivity
     private static boolean isSelectAll = true;
     private static boolean isNotesList = true;
 
-    private FloatingActionButton addNewNoteBtn;
     private TextView tvPlaceholder;
 
     private RadioButton rbFabNote;
@@ -78,7 +80,6 @@ public class MainActivity extends AppCompatActivity
         listView = (ListView) findViewById(R.id.list_notes);
         tvPlaceholder = (TextView) findViewById(R.id.there_is_no_notes);
 
-        addNewNoteBtn = (FloatingActionButton) findViewById(R.id.fab);
         rbFabNote = (RadioButton) findViewById(R.id.fab_note);
     }
 
@@ -87,7 +88,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setButtonsBehavior() {
-        addNewNoteBtn.setOnClickListener(this);
+        (findViewById(R.id.fab)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NotesActions.addNewNote(MainActivity.this);
+                /*if (rbFabNote.isChecked()) {
+                    Log.d("appLog", "addNewNote");
+                    NotesActions.addNewNote(MainActivity.this);
+                } else {
+                    Log.d("appLog", "addNewTodo");
+                    NotesActions.addNewTodo(MainActivity.this);
+                }*/
+            }
+        });
     }
 
     @SuppressWarnings("deprecation")
@@ -139,16 +152,19 @@ public class MainActivity extends AppCompatActivity
                 dataColumns,        // Bind the data in column COL_TITLE...
                 viewIDs             // ...to the TextView with id "R.id.tv_list_view_item"
         );
-        //NotesCursorAdapter ncAdapter = new NotesCursorAdapter(this, cursor);
-        // old adapter
-        //adapter = new SimpleNotesAdapter(this, R.layout.list_view, R.id.tv_list_view_item);
 
         // Set the ListView's adapter to be the cursor adapter that was just created
         listView.setAdapter(cursorAdapter);
 
         //listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
-        setListViewBehavior();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("appLog", "MainActivity.position = " + position);
+                NotesActions.showSelected(MainActivity.this, position);
+            }
+        });
         registerForContextMenu(listView);
 
         //listView.setVisibility(View.VISIBLE);
@@ -157,13 +173,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (resultCode != RESULT_OK) return;
-        if (requestCode == 1) {
+        if (requestCode == REQUEST_CODE_NEW) {
             Toast.makeText(this, "New note is added", Toast.LENGTH_SHORT).show();
             showOrHidePlaceholder();
         }
-        if (requestCode == 3) {
+        if (requestCode == REQUEST_CODE_EDIT) {
             Toast.makeText(this, "The note is edited", Toast.LENGTH_SHORT).show();
             closeDeletingProcess();
             optionsMenu.findItem(R.id.edit_note).setVisible(false);
@@ -302,32 +317,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fab: {
-                NotesActions.addNewNote(MainActivity.this);
-                /*if (rbFabNote.isChecked()) {
-                    Log.d("appLog", "addNewNote");
-                    NotesActions.addNewNote(MainActivity.this);
-                } else {
-                    Log.d("appLog", "addNewTodo");
-                    NotesActions.addNewTodo(MainActivity.this);
-                }*/
-                break;
-            }
-        }
-    }
-
-    private void setListViewBehavior() {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                NotesActions.showSelected(MainActivity.this, position);
-            }
-        });
     }
 
     private void showDeleteDialog() {

@@ -40,4 +40,6 @@
     <string name="fab_todo">Todo</string>
     <string name="nav_exit">Exit</string>
     <string name="nav_notes_and_todo">All</string>
+    <string name="btn_save_note">Save</string>
+    <string name="btn_cancel_save">Cancel</string>
 </resources>

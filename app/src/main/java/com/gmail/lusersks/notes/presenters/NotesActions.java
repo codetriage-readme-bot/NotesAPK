@@ -29,6 +29,10 @@ public class NotesActions {
     public static final String FLAG_TODO = "todo";
     public static final String EXTRA_ID = "id";
 
+    public static final int REQUEST_CODE_NEW = 1;
+    public static final int REQUEST_CODE_EDIT = 2;
+    public static final int REQUEST_CODE_SHOW = 3;
+
     private static void addNew(Activity activity, String type) {
         Intent intent = new Intent();
         intent.setClass(activity.getApplicationContext(), FormActivity.class);
@@ -36,7 +40,7 @@ public class NotesActions {
         intent.putExtra(EXTRA_NOTE, "");
         intent.putExtra(EXTRA_CONTENT, "");
         intent.putExtra(EXTRA_TYPE, type);
-        activity.startActivityForResult(intent, 1);
+        activity.startActivityForResult(intent, REQUEST_CODE_NEW);
     }
 
     public static void editSelected(ShowActivity activity, String type) {
@@ -45,7 +49,7 @@ public class NotesActions {
         intent.putExtra(EXTRA_NOTE, activity.tvItemTitle.getText());
         intent.putExtra(EXTRA_CONTENT, activity.tvNoteContent.getText());
         intent.putExtra(EXTRA_TYPE, type);
-        activity.startActivityForResult(intent, 2);
+        activity.startActivityForResult(intent, REQUEST_CODE_EDIT);
     }
 
     public static void editSelected(Activity activity, int position, String type) {
@@ -55,7 +59,7 @@ public class NotesActions {
         intent.putExtra(EXTRA_NOTE, NotesData.getNote(position));
         intent.putExtra(EXTRA_CONTENT, NotesData.getContext(position));
         intent.putExtra(EXTRA_TYPE, type);
-        activity.startActivityForResult(intent, 3);
+        activity.startActivityForResult(intent, REQUEST_CODE_EDIT);
     }
 
     public static void showSelected(Activity activity, int position) {
@@ -83,6 +87,7 @@ public class NotesActions {
         }
         cursor.close();*/
 
+        Log.d("appLog", "NotesData.getIdAtPosition(position) = " + NotesData.getIdAtPosition(position));
         Uri uri = Uri.parse(NOTES_CONTENT_URI + "/" + (NotesData.getIdAtPosition(position)));
         ContentResolver cr = activity.getApplicationContext().getContentResolver();
 
@@ -101,7 +106,7 @@ public class NotesActions {
         activity.startActivity(intent);
     }
 
-    public static void addNewNote(MainActivity activity) {
+    public static void addNewNote(Activity activity) {
         addNew(activity, FLAG_NOTE);
     }
 

@@ -11,8 +11,8 @@
         android:theme="@style/AppTheme">
 
         <provider
-            android:authorities="com.gmail.lusersks.notes.noteslist"
-            android:name=".provider.NotesProvider"/>
+            android:name=".provider.NotesProvider"
+            android:authorities="com.gmail.lusersks.notes.noteslist" />
 
         <activity
             android:name=".MainActivity"
@@ -28,11 +28,16 @@
         <activity
             android:name=".views.PreferencesActivity"
             android:label="Preferences" />
-        <activity android:name=".views.FormActivity" />
+
+        <activity
+            android:name=".views.FormActivity"
+            android:label=""
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
 
         <activity
             android:name=".views.ShowActivity"
-            android:label="Note" />
+            android:label=""
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
 
     </application>
 

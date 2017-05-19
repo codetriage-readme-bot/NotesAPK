@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.gmail.lusersks.notes.models.NotesData;
@@ -31,7 +32,6 @@ import static com.gmail.lusersks.notes.provider.NotesProvider.TAG_LOG;
 
 public class FormActivity extends AppCompatActivity {
     private EditText etNoteTitle, etNoteContent;
-    private Intent intent;
     private String oldTitle, itemType;
 
     @Override
@@ -39,13 +39,14 @@ public class FormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form);
 
-        intent = getIntent();
-
         initViews();
         readExtraFields();
+        setButtonsBehavior();
     }
 
     private void readExtraFields() {
+        Intent intent = getIntent();
+
         setTitle(intent.getStringExtra(EXTRA_FORM_TITLE));
 
         oldTitle = intent.getStringExtra(EXTRA_NOTE);
@@ -65,44 +66,35 @@ public class FormActivity extends AppCompatActivity {
         etNoteContent = (EditText) findViewById(R.id.et_note_content);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_form, menu);
-        return true;
-    }
+    private void setButtonsBehavior() {
+        (findViewById(R.id.btn_save_note)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+                String title = etNoteTitle.getText().toString();
+                String content = etNoteContent.getText().toString();
 
-        if (id == R.id.menu_form_save) {
-            //Log.d("appLog", "R.id.menu_form_save");
-            //Log.d("appLog", "getTitle() = " + getTitle());
+                if (getTitle().equals("New Note")) {
+                    NotesData.addItem(title, content, itemType);
 
-            String title = etNoteTitle.getText().toString();
-            String content = etNoteContent.getText().toString();
+                } else if (getTitle().equals("Edit Note")) {
+                    NotesData.editItem(oldTitle, title, content, itemType);
+                    intent.putExtra(EXTRA_NOTE, title);
+                    intent.putExtra(EXTRA_CONTENT, content);
+                }
 
-            if (getTitle().equals("New Note")) {
-                NotesData.addItem(title, content, itemType);
+                setResult(RESULT_OK, intent);
+                finish();
             }
-            if (getTitle().equals("Edit Note")) {
-                NotesData.editItem(oldTitle, title, content, itemType);
-                intent.putExtra(EXTRA_NOTE, title);
-                intent.putExtra(EXTRA_CONTENT, content);
+        });
+
+        (findViewById(R.id.btn_cancel_save)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_CANCELED, new Intent());
+                finish();
             }
-
-            setResult(RESULT_OK, intent);
-            finish();
-            return true;
-        }
-
-        if (id == R.id.menu_settings) {
-            Intent intent = new Intent();
-            intent.setClass(this, PreferencesActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        return false;
+        });
     }
 }
