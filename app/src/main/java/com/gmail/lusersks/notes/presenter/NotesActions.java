@@ -1,4 +1,4 @@
-package com.gmail.lusersks.notes.presenters;
+package com.gmail.lusersks.notes.presenter;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -8,19 +8,16 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.gmail.lusersks.notes.MainActivity;
-import com.gmail.lusersks.notes.models.NotesData;
-import com.gmail.lusersks.notes.views.FormActivity;
-import com.gmail.lusersks.notes.views.ShowActivity;
+import com.gmail.lusersks.notes.model.NotesData;
+import com.gmail.lusersks.notes.view.FormActivity;
+import com.gmail.lusersks.notes.view.ShowActivity;
 
 import static com.gmail.lusersks.notes.MainActivity.EXTRA_CONTENT;
 import static com.gmail.lusersks.notes.MainActivity.EXTRA_FORM_TITLE;
 import static com.gmail.lusersks.notes.MainActivity.EXTRA_NOTE;
 import static com.gmail.lusersks.notes.provider.Constants.COL_BODY;
-import static com.gmail.lusersks.notes.provider.Constants.COL_ID;
 import static com.gmail.lusersks.notes.provider.Constants.COL_TITLE;
-import static com.gmail.lusersks.notes.provider.Constants.COL_TYPE;
 import static com.gmail.lusersks.notes.provider.Constants.NOTES_CONTENT_URI;
-import static com.gmail.lusersks.notes.provider.Constants.URI_NOTES;
 
 public class NotesActions {
 
@@ -41,15 +38,6 @@ public class NotesActions {
         intent.putExtra(EXTRA_CONTENT, "");
         intent.putExtra(EXTRA_TYPE, type);
         activity.startActivityForResult(intent, REQUEST_CODE_NEW);
-    }
-
-    public static void editSelected(ShowActivity activity, String type) {
-        Intent intent = new Intent(activity, FormActivity.class);
-        intent.putExtra(EXTRA_FORM_TITLE, "Edit Note");
-        intent.putExtra(EXTRA_NOTE, activity.tvItemTitle.getText());
-        intent.putExtra(EXTRA_CONTENT, activity.tvNoteContent.getText());
-        intent.putExtra(EXTRA_TYPE, type);
-        activity.startActivityForResult(intent, REQUEST_CODE_EDIT);
     }
 
     public static void editSelected(Activity activity, int position, String type) {

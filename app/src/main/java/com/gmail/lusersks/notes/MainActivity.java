@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -29,12 +28,12 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gmail.lusersks.notes.presenters.NotesActions;
-import com.gmail.lusersks.notes.models.NotesData;
-import com.gmail.lusersks.notes.views.PreferencesActivity;
+import com.gmail.lusersks.notes.presenter.NotesActions;
+import com.gmail.lusersks.notes.model.NotesData;
+import com.gmail.lusersks.notes.view.PreferencesActivity;
 
-import static com.gmail.lusersks.notes.presenters.NotesActions.REQUEST_CODE_EDIT;
-import static com.gmail.lusersks.notes.presenters.NotesActions.REQUEST_CODE_NEW;
+import static com.gmail.lusersks.notes.presenter.NotesActions.REQUEST_CODE_EDIT;
+import static com.gmail.lusersks.notes.presenter.NotesActions.REQUEST_CODE_NEW;
 import static com.gmail.lusersks.notes.provider.Constants.COL_ID;
 import static com.gmail.lusersks.notes.provider.Constants.COL_TITLE;
 import static com.gmail.lusersks.notes.provider.Constants.NOTES_CONTENT_URI;
@@ -187,16 +186,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         this.optionsMenu = menu;
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.menu_main_clear: {
                 NotesData.clearItems();
@@ -231,7 +227,6 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         }
-
         return true;
     }
 
@@ -303,7 +298,6 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

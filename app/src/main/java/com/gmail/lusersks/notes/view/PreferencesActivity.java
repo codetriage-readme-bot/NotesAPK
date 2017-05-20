@@ -1,4 +1,4 @@
-package com.gmail.lusersks.notes.views;
+package com.gmail.lusersks.notes.view;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;

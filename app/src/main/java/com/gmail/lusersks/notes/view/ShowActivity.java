@@ -1,4 +1,4 @@
-package com.gmail.lusersks.notes.views;
+package com.gmail.lusersks.notes.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,11 +13,11 @@ import android.widget.TextView;
 
 import com.gmail.lusersks.notes.MainActivity;
 import com.gmail.lusersks.notes.R;
-import com.gmail.lusersks.notes.presenters.ParseTodoAdapter;
+import com.gmail.lusersks.notes.presenter.ParseTodoAdapter;
 
 public class ShowActivity extends AppCompatActivity {
-    public TextView tvItemTitle;
-    public TextView tvNoteContent;
+    private TextView tvItemTitle;
+    private TextView tvNoteContent;
     private ListView lvTodoList;
     private ParseTodoAdapter adapter;
     private boolean isTodo;

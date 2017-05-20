@@ -1,4 +1,4 @@
-package com.gmail.lusersks.notes.presenters;
+package com.gmail.lusersks.notes.presenter;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -17,11 +17,11 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.gmail.lusersks.notes.R;
-import com.gmail.lusersks.notes.models.NotesData;
+import com.gmail.lusersks.notes.model.NotesData;
 
 import java.util.ArrayList;
 
-import static com.gmail.lusersks.notes.presenters.NotesActions.FLAG_TODO;
+import static com.gmail.lusersks.notes.presenter.NotesActions.FLAG_TODO;
 
 public class ParseTodoAdapter extends ArrayAdapter<String> {
 

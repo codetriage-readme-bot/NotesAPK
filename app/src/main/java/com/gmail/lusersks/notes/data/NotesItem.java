@@ -1,4 +1,4 @@
-package com.gmail.lusersks.notes.database;
+package com.gmail.lusersks.notes.data;
 
 public class NotesItem {
     private int id;

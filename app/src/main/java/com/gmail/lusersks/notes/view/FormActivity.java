@@ -1,34 +1,19 @@
-package com.gmail.lusersks.notes.views;
+package com.gmail.lusersks.notes.view;
 
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
-import com.gmail.lusersks.notes.models.NotesData;
+import com.gmail.lusersks.notes.model.NotesData;
 import com.gmail.lusersks.notes.R;
 
 import static com.gmail.lusersks.notes.MainActivity.EXTRA_CONTENT;
 import static com.gmail.lusersks.notes.MainActivity.EXTRA_FORM_TITLE;
 import static com.gmail.lusersks.notes.MainActivity.EXTRA_NOTE;
-import static com.gmail.lusersks.notes.presenters.NotesActions.EXTRA_ID;
-import static com.gmail.lusersks.notes.presenters.NotesActions.EXTRA_TYPE;
-import static com.gmail.lusersks.notes.provider.Constants.COL_BODY;
-import static com.gmail.lusersks.notes.provider.Constants.COL_TITLE;
-import static com.gmail.lusersks.notes.provider.Constants.COL_TYPE;
-import static com.gmail.lusersks.notes.provider.Constants.NOTES_CONTENT_URI;
-import static com.gmail.lusersks.notes.provider.NotesProvider.TAG_LOG;
+import static com.gmail.lusersks.notes.presenter.NotesActions.EXTRA_TYPE;
 
 public class FormActivity extends AppCompatActivity {
     private EditText etNoteTitle, etNoteContent;

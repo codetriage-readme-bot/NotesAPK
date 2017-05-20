@@ -1,4 +1,4 @@
-package com.gmail.lusersks.notes.models;
+package com.gmail.lusersks.notes.model;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
-import com.gmail.lusersks.notes.database.NotesItem;
+import com.gmail.lusersks.notes.data.NotesItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +60,6 @@ public class NotesData {
             int id = Integer.parseInt(newUri.getLastPathSegment());
             listNotesItems.add(new NotesItem(id, title, content, itemType));
         }
-
-        //dbHelper.insertRecord(title, content, itemType);
     }
 
     public static void editItem(String oldTitle, String title, String content, String itemType) {
@@ -77,8 +75,6 @@ public class NotesData {
         Uri uri = ContentUris.withAppendedId(NOTES_CONTENT_URI, id);
         int cnt = cr.update(uri, cv, null, null);
         Log.d(TAG_LOG, "update, result Uri : " + cnt);
-
-        //dbHelper.updateRecord(index + 1, title, content, itemType);
     }
 
     public static void deleteItem(String noteTitle) {
@@ -95,8 +91,6 @@ public class NotesData {
         Uri uri = ContentUris.withAppendedId(NOTES_CONTENT_URI, id);
         int cnt = cr.delete(uri, null, null);
         Log.d(TAG_LOG, "delete, count = " + cnt);
-
-        //dbHelper.deleteRecord(index);
     }
 
     public static void clearItems() {
@@ -104,8 +98,6 @@ public class NotesData {
 
         int cnt = cr.delete(NOTES_CONTENT_URI, null, null);
         Log.d(TAG_LOG, "delete, count = " + cnt);
-
-        //dbHelper.clearDB();
     }
 
     public static String getNote(int index) {
