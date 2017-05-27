@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.gmail.lusersks.notes.MainActivity"
+    tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
     <ListView
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="@string/there_is_no_notes"
+        android:text="@string/tv_there_is_no_notes"
         android:textSize="20sp"
         android:textStyle="bold" />
 

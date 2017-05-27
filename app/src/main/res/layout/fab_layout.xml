@@ -40,14 +40,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="@string/fab_note" />
+            android:text="@string/rb_fab_note" />
 
         <RadioButton
             android:id="@+id/fab_todo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:text="@string/fab_todo" />
+            android:text="@string/rb_fab_todo" />
 
     </RadioGroup>
 

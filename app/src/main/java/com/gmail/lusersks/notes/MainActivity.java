@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity
 
         initViews();
         initDBHelper();
-        setButtonsBehavior();
+        setFabButtonBehavior();
 
         setSupportActionBar(toolbar);
         initLeftNavigationBar();
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         NotesData.initDBHelper(getContentResolver());
     }
 
-    private void setButtonsBehavior() {
+    private void setFabButtonBehavior() {
         (findViewById(R.id.fab)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

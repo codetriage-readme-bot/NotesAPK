@@ -9,7 +9,6 @@
         android:id="@+id/lv_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="#N"
         android:visibility="gone" />
 
     <TextView
@@ -17,10 +16,10 @@
         android:layout_width="368dp"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="@string/note_title"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintLeft_toRightOf="@+id/lv_check_box"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="Note Title" />
 
 </android.support.constraint.ConstraintLayout>

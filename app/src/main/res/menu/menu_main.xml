@@ -1,19 +1,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.gmail.lusersks.notes.MainActivity">
+    tools:context=".MainActivity">
 
     <item
         android:id="@+id/menu_main_clear"
         android:orderInCategory="1"
-        android:title="@string/menu_main_clear"
+        android:title="@string/menu_clear"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/edit_note"
         android:icon="@drawable/ic_mode_edit_black_24dp"
         android:orderInCategory="11"
-        android:title="@string/edit_note"
+        android:title="@string/menu_edit"
         android:visible="false"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
@@ -23,7 +23,7 @@
             android:id="@+id/select_all"
             android:icon="@drawable/ic_done_all"
             android:orderInCategory="12"
-            android:title="@string/select_all"
+            android:title="@string/menu_select_all"
             android:visible="false"
             app:showAsAction="always" />
 
@@ -31,7 +31,7 @@
             android:id="@+id/multiple_delete"
             android:icon="@drawable/ic_delete"
             android:orderInCategory="13"
-            android:title="@string/multiple_delete"
+            android:title="@string/menu_delete"
             android:visible="false"
             app:showAsAction="always" />
 
@@ -39,7 +39,7 @@
             android:id="@+id/cancel_delete"
             android:icon="@drawable/ic_clear"
             android:orderInCategory="14"
-            android:title="@string/cancel_delete"
+            android:title="@string/menu_cancel"
             android:visible="false"
             app:showAsAction="always" />
 

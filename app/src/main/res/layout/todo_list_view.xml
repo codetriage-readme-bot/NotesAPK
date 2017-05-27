@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-   <!-- <CheckedTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />-->
+    <!-- <CheckedTextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content" />-->
 
     <CheckBox
         android:id="@+id/cb_todo_done"
@@ -21,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
-        android:text="Todo item"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:text="Todo item" />
 
 </LinearLayout>

@@ -30,7 +30,7 @@ import static com.gmail.lusersks.notes.provider.Constants.uriMatcher;
 public class NotesProvider extends ContentProvider {
 
     private static final String CREATE_TABLE_QUERY =
-            "create table if not exist " + NOTES_TABLE + " ( "
+            "create table " + NOTES_TABLE + " ( "
                     + COL_ID + " integer primary key autoincrement, "
                     + COL_TITLE + " text, "
                     + COL_BODY + " text, "

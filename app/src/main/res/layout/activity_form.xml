@@ -9,7 +9,7 @@
         android:id="@+id/et_note_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/note_hint_title"
+        android:hint="@string/hint_note_title"
         android:padding="16dp" />
 
     <EditText
@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/et_note_title"
-        android:hint="@string/note_hint_content"
+        android:hint="@string/hint_note_content"
         android:padding="16dp" />
 
     <Button
@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/et_note_content"
-        android:text="@string/btn_save_note"/>
+        android:text="@string/btn_save"/>
 
     <Button
         android:id="@+id/btn_cancel_save"
@@ -33,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/et_note_content"
         android:layout_toRightOf="@id/btn_save_note"
-        android:text="@string/btn_cancel_save"/>
+        android:layout_toEndOf="@id/btn_save_note"
+        android:text="@string/btn_cancel"/>
 
 </RelativeLayout>
