@@ -5,29 +5,43 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!--<TextView
+    <TextView
         android:id="@+id/tv_show_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="@string/show_note"
-        android:layout_above="@+id/tv_note_content"
         android:layout_centerHorizontal="true"
-        android:textAppearance="?android:attr/textAppearanceLarge" />-->
+        android:padding="16dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        tools:text="Title" />
 
-    <TextView
-        android:id="@+id/tv_note_content"
+    <EditText
+        android:id="@+id/et_show_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tv_show_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_show_title"
         android:layout_centerHorizontal="true"
         android:padding="16dp"
-        tools:text="@string/tv_show_content"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        tools:text="Content" />
+
+    <EditText
+        android:id="@+id/et_show_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_show_title"
+        android:visibility="invisible" />
 
     <ListView
         android:id="@+id/lv_todo_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_show_title"
         android:visibility="gone" />
 
 </RelativeLayout>

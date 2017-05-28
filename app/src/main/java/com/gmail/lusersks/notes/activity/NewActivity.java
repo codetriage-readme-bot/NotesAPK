@@ -1,4 +1,4 @@
-package com.gmail.lusersks.notes.view;
+package com.gmail.lusersks.notes.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,12 +10,12 @@ import android.widget.EditText;
 import com.gmail.lusersks.notes.model.NotesData;
 import com.gmail.lusersks.notes.R;
 
-import static com.gmail.lusersks.notes.MainActivity.EXTRA_CONTENT;
-import static com.gmail.lusersks.notes.MainActivity.EXTRA_FORM_TITLE;
-import static com.gmail.lusersks.notes.MainActivity.EXTRA_NOTE;
-import static com.gmail.lusersks.notes.presenter.NotesActions.EXTRA_TYPE;
+import static com.gmail.lusersks.notes.model.IntentConstants.EXTRA_CONTENT;
+import static com.gmail.lusersks.notes.model.IntentConstants.EXTRA_FORM_TITLE;
+import static com.gmail.lusersks.notes.model.IntentConstants.EXTRA_NOTE;
+import static com.gmail.lusersks.notes.model.IntentConstants.EXTRA_TYPE;
 
-public class FormActivity extends AppCompatActivity {
+public class NewActivity extends AppCompatActivity {
     private EditText etNoteTitle, etNoteContent;
     private String oldTitle, itemType;
 
@@ -32,7 +32,7 @@ public class FormActivity extends AppCompatActivity {
     private void readExtraFields() {
         Intent intent = getIntent();
 
-        setTitle(intent.getStringExtra(EXTRA_FORM_TITLE));
+        setTitle("New " + intent.getStringExtra(EXTRA_TYPE));
 
         oldTitle = intent.getStringExtra(EXTRA_NOTE);
         String content = intent.getStringExtra(EXTRA_CONTENT);
@@ -55,21 +55,12 @@ public class FormActivity extends AppCompatActivity {
         (findViewById(R.id.btn_save_note)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-
                 String title = etNoteTitle.getText().toString();
                 String content = etNoteContent.getText().toString();
 
-                if (getTitle().equals("New Note")) {
-                    NotesData.addItem(title, content, itemType);
+                NotesData.addItem(title, content, itemType);
 
-                } else if (getTitle().equals("Edit Note")) {
-                    NotesData.editItem(oldTitle, title, content, itemType);
-                    intent.putExtra(EXTRA_NOTE, title);
-                    intent.putExtra(EXTRA_CONTENT, content);
-                }
-
-                setResult(RESULT_OK, intent);
+                setResult(RESULT_OK, new Intent());
                 finish();
             }
         });

@@ -9,15 +9,6 @@
         android:title="@string/menu_clear"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/edit_note"
-        android:icon="@drawable/ic_mode_edit_black_24dp"
-        android:orderInCategory="11"
-        android:title="@string/menu_edit"
-        android:visible="false"
-        app:showAsAction="always"
-        tools:ignore="AlwaysShowAction" />
-
     <group android:id="@+id/context_view_items">
         <item
             android:id="@+id/select_all"

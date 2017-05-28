@@ -19,6 +19,7 @@ import android.view.ContextMenu;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -30,10 +31,9 @@ import android.widget.Toast;
 
 import com.gmail.lusersks.notes.presenter.NotesActions;
 import com.gmail.lusersks.notes.model.NotesData;
-import com.gmail.lusersks.notes.view.PreferencesActivity;
+import com.gmail.lusersks.notes.activity.PreferencesActivity;
 
-import static com.gmail.lusersks.notes.presenter.NotesActions.REQUEST_CODE_EDIT;
-import static com.gmail.lusersks.notes.presenter.NotesActions.REQUEST_CODE_NEW;
+import static com.gmail.lusersks.notes.model.IntentConstants.REQUEST_CODE_NEW;
 import static com.gmail.lusersks.notes.provider.Constants.COL_ID;
 import static com.gmail.lusersks.notes.provider.Constants.COL_TITLE;
 import static com.gmail.lusersks.notes.provider.Constants.NOTES_CONTENT_URI;
@@ -41,12 +41,10 @@ import static com.gmail.lusersks.notes.provider.Constants.NOTES_CONTENT_URI;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final String EXTRA_NOTE = "extra_note";
-    public static final String EXTRA_CONTENT = "extra_content";
-    public static final String EXTRA_FORM_TITLE = "extra_form_title";
-
+    public static final String TAG = "appLog";
     private static boolean isSelectAll = true;
     private static boolean isNotesList = true;
+    private static int selectedCount = 0;
 
     private TextView tvPlaceholder;
 
@@ -92,10 +90,10 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 NotesActions.addNewNote(MainActivity.this);
                 /*if (rbFabNote.isChecked()) {
-                    Log.d("appLog", "addNewNote");
+                    Log.d(TAG, "addNewNote");
                     NotesActions.addNewNote(MainActivity.this);
                 } else {
-                    Log.d("appLog", "addNewTodo");
+                    Log.d(TAG, "addNewTodo");
                     NotesActions.addNewTodo(MainActivity.this);
                 }*/
             }
@@ -155,12 +153,12 @@ public class MainActivity extends AppCompatActivity
         // Set the ListView's adapter to be the cursor adapter that was just created
         listView.setAdapter(cursorAdapter);
 
-        //listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        listView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("appLog", "MainActivity.position = " + position);
+                Log.d(TAG, "MainActivity.position = " + position);
                 NotesActions.showSelected(MainActivity.this, position);
             }
         });
@@ -175,12 +173,7 @@ public class MainActivity extends AppCompatActivity
         if (resultCode != RESULT_OK) return;
         if (requestCode == REQUEST_CODE_NEW) {
             Toast.makeText(this, "New note is added", Toast.LENGTH_SHORT).show();
-            showOrHidePlaceholder();
-        }
-        if (requestCode == REQUEST_CODE_EDIT) {
-            Toast.makeText(this, "The note is edited", Toast.LENGTH_SHORT).show();
-            closeDeletingProcess();
-            optionsMenu.findItem(R.id.edit_note).setVisible(false);
+            tvPlaceholder.setVisibility(View.GONE);
         }
     }
 
@@ -199,15 +192,11 @@ public class MainActivity extends AppCompatActivity
                 tvPlaceholder.setVisibility(View.VISIBLE);
                 break;
             }
-            case R.id.edit_note: {
-                String type = rbFabNote.isChecked() ? "note" : "todo";
-                NotesActions.editSelected(this, sbArray.keyAt(0), type);
-                break;
-            }
             case R.id.select_all: {
                 CheckBox cbNote;
                 // If SelectAll was clicked -> inverse state of the CheckBox'es
                 boolean isChecked = !isSelectAll;
+                Log.d(TAG, "" + isChecked);
                 for (int i = 0; i < cursorAdapter.getCount(); i++) {
                     cbNote = (CheckBox) listView.getChildAt(i).findViewById(R.id.lv_check_box);
                     cbNote.setChecked(isChecked);
@@ -251,7 +240,9 @@ public class MainActivity extends AppCompatActivity
             cbNote = (CheckBox) listView.getChildAt(i).findViewById(R.id.lv_check_box);
             cbNote.setVisibility(visibility);
             cbNote.setChecked(false);
-            cbNote.setText(String.valueOf(i));
+            cbNote.setContentDescription(String.valueOf(i));
+            Log.d(TAG, "String.valueOf(i) = " + String.valueOf(i));
+            Log.d(TAG, "cbNote.getContentDescription().toString() = " + cbNote.getContentDescription().toString());
             if (visibility == View.VISIBLE) {
                 setCheckBoxBehavior(cbNote);
             }
@@ -352,11 +343,28 @@ public class MainActivity extends AppCompatActivity
         cbNote.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                sbArray.put(Integer.parseInt(buttonView.getText().toString()), isChecked);
+                sbArray.put(Integer.parseInt(buttonView.getContentDescription().toString()), isChecked);
+/*
+                // TODO: WRONG algorithm - sbArray hold not only checked items
                 isSelectAll = (sbArray.size() == cursorAdapter.getCount());
 
-                toolbar.setTitle(sbArray.size() + "");
-                optionsMenu.findItem(R.id.edit_note).setVisible(sbArray.size() == 1);
+                // TODO: WRONG - getCheckedItemPositions always return NULL
+                // TODO: StartAndroid урок 43:
+                // пишем в лог выделенные элементы
+                Log.d(TAG, "checked: ");
+                SparseBooleanArray sbArray1 = listView.getCheckedItemPositions();
+                if (sbArray1 != null) {
+                    for (int i = 0; i < sbArray1.size(); i++) {
+                        int key = sbArray1.keyAt(i);
+                        if (sbArray1.get(key)) Log.d(TAG, NotesData.getNote(key));
+                    }
+                }
+*/
+                if (isChecked) selectedCount++;
+                else selectedCount--;
+                isSelectAll = (selectedCount == cursorAdapter.getCount());
+
+                toolbar.setTitle(sbArray.size() + " Selected");
 
                 cursorAdapter.notifyDataSetChanged();
             }
@@ -364,7 +372,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showOrHidePlaceholder() {
-        //Log.d("appLog", "Placeholder: count of items = " + adapter.getCount());
+        //Log.d(TAG, "Placeholder: count of items = " + adapter.getCount());
         if (cursorAdapter.getCount() != 0) {
             tvPlaceholder.setVisibility(View.GONE);
         } else {

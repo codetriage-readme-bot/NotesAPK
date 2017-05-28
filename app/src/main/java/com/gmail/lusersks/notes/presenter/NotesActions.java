@@ -9,45 +9,30 @@ import android.util.Log;
 
 import com.gmail.lusersks.notes.MainActivity;
 import com.gmail.lusersks.notes.model.NotesData;
-import com.gmail.lusersks.notes.view.FormActivity;
-import com.gmail.lusersks.notes.view.ShowActivity;
+import com.gmail.lusersks.notes.activity.NewActivity;
+import com.gmail.lusersks.notes.activity.ShowActivity;
 
-import static com.gmail.lusersks.notes.MainActivity.EXTRA_CONTENT;
-import static com.gmail.lusersks.notes.MainActivity.EXTRA_FORM_TITLE;
-import static com.gmail.lusersks.notes.MainActivity.EXTRA_NOTE;
+import static com.gmail.lusersks.notes.model.IntentConstants.EXTRA_CONTENT;
+import static com.gmail.lusersks.notes.model.IntentConstants.EXTRA_FORM_TITLE;
+import static com.gmail.lusersks.notes.model.IntentConstants.EXTRA_NOTE;
+import static com.gmail.lusersks.notes.model.IntentConstants.EXTRA_TYPE;
+import static com.gmail.lusersks.notes.model.IntentConstants.REQUEST_CODE_NEW;
 import static com.gmail.lusersks.notes.provider.Constants.COL_BODY;
 import static com.gmail.lusersks.notes.provider.Constants.COL_TITLE;
 import static com.gmail.lusersks.notes.provider.Constants.NOTES_CONTENT_URI;
 
 public class NotesActions {
 
-    public static final String EXTRA_TYPE = "type";
-    public static final String FLAG_NOTE = "note";
-    public static final String FLAG_TODO = "todo";
-    public static final String EXTRA_ID = "id";
-
-    public static final int REQUEST_CODE_NEW = 1;
-    public static final int REQUEST_CODE_EDIT = 2;
-    public static final int REQUEST_CODE_SHOW = 3;
+    static final String FLAG_NOTE = "note";
+    static final String FLAG_TODO = "todo";
 
     private static void addNew(Activity activity, String type) {
         Intent intent = new Intent();
-        intent.setClass(activity.getApplicationContext(), FormActivity.class);
-        intent.putExtra(EXTRA_FORM_TITLE, "New Note");
+        intent.setClass(activity.getApplicationContext(), NewActivity.class);
         intent.putExtra(EXTRA_NOTE, "");
         intent.putExtra(EXTRA_CONTENT, "");
         intent.putExtra(EXTRA_TYPE, type);
         activity.startActivityForResult(intent, REQUEST_CODE_NEW);
-    }
-
-    public static void editSelected(Activity activity, int position, String type) {
-        Intent intent = new Intent(activity, FormActivity.class);
-        intent.putExtra(EXTRA_FORM_TITLE, "Edit Note");
-        intent.putExtra(EXTRA_ID, position);
-        intent.putExtra(EXTRA_NOTE, NotesData.getNote(position));
-        intent.putExtra(EXTRA_CONTENT, NotesData.getContext(position));
-        intent.putExtra(EXTRA_TYPE, type);
-        activity.startActivityForResult(intent, REQUEST_CODE_EDIT);
     }
 
     public static void showSelected(Activity activity, int position) {
